@@ -268,7 +268,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!222 &130868693
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -710,7 +711,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!222 &701880542
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -963,7 +965,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!114 &802006307
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1052,7 +1055,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!114 &854192953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1152,7 +1156,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!222 &901102437
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1241,7 +1246,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!222 &905775774
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1840,7 +1846,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!114 &1387796179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2254,7 +2261,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!1 &1899768279
 GameObject:
   m_ObjectHideFlags: 0
@@ -2266,11 +2274,9 @@ GameObject:
   - component: {fileID: 1899768280}
   - component: {fileID: 1899768281}
   - component: {fileID: 1899768283}
+  - component: {fileID: 1899768285}
   - component: {fileID: 1899768282}
   - component: {fileID: 1899768284}
-  - component: {fileID: 1899768287}
-  - component: {fileID: 1899768286}
-  - component: {fileID: 1899768285}
   m_Layer: 5
   m_Name: Game
   m_TagString: Untagged
@@ -2340,11 +2346,10 @@ MonoBehaviour:
   - {fileID: 970350890}
   panel: {fileID: 1595104182}
   move: 0
-  eazyTic: {fileID: 1899768282}
-  eazyTac: {fileID: 1899768284}
-  normTic: {fileID: 1899768287}
-  normTac: {fileID: 1899768286}
+  EasyLevelScript: {fileID: 1899768282}
+  NormalLevelScript: {fileID: 1899768284}
   hardTic: {fileID: 1899768285}
+  CheckScript: {fileID: 1899768283}
 --- !u!114 &1899768282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2354,11 +2359,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1899768279}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0163bdb602f7ee04697b2ab8ed58f838, type: 3}
+  m_Script: {fileID: 11500000, guid: cb195c848c42ca540a3b8a7f96320641, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
-  checkScript: {fileID: 1899768283}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!114 &1899768283
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2381,11 +2386,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1899768279}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2cf30f73a4dee0244a68a30387bafe74, type: 3}
+  m_Script: {fileID: 11500000, guid: 274ad4fcc0d968241aad25a907b064d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
-  checkScript: {fileID: 1899768283}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!114 &1899768285
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2400,34 +2405,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameScript: {fileID: 1899768281}
   checkScript: {fileID: 1899768283}
---- !u!114 &1899768286
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1899768279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb111c1607a4eec43a96e04182833b1a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
-  checkScript: {fileID: 1899768283}
---- !u!114 &1899768287
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1899768279}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c74ea1750ad982d41a86aa3812fe3152, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GameScript: {fileID: 1899768281}
-  CheckScript: {fileID: 1899768283}
 --- !u!1 &1920941927
 GameObject:
   m_ObjectHideFlags: 0
@@ -2643,7 +2620,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 667dd3ca96f7db44f92c6263fc9cead9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gameScript: {fileID: 1899768281}
+  GameScript: {fileID: 1899768281}
+  CheckScript: {fileID: 1899768283}
 --- !u!222 &2002850363
 CanvasRenderer:
   m_ObjectHideFlags: 0

@@ -295,8 +295,6 @@ public class CheckGame : MonoBehaviour
             // Выбор наилучшей ячейки для защиты
             if (protect.Count > 0)
             {
-                // Дописать стратегию защиты !!!
-
                 bool isThereBestPosition = false; // Есть ли наилучшая позиция защиты
                 int bestPosition = 0; // Наулучшая позиция защиты
 

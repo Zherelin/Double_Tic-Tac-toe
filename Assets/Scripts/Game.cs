@@ -22,11 +22,10 @@ public class Game : MonoBehaviour
     private int typePlayer; //
     private int typeEnemy;  // Какой тип игрока и соперника
 
-    public EazyTicGame eazyTic; // Подключение скриптов
-    public EazyTacGame eazyTac; //
-    public NormTicGame normTic; //
-    public NormTacGame normTac; //
+    [SerializeField] private EasyDifficultyLevel EasyLevelScript;
+    [SerializeField] private NormalDifficultyLevel NormalLevelScript;
     public HardTicGame hardTic; //
+    [SerializeField] private CheckGame CheckScript;
 
     public void Start()
     {
@@ -97,7 +96,7 @@ public class Game : MonoBehaviour
 
     private IEnumerator StartGame()
     {
-        while (eazyTic.checkScript.StatusGame() == 0)
+        while (CheckScript.StatusGame() == 0)
         {
             if (CheckMove(typePlayer) == true)
             {
@@ -121,16 +120,16 @@ public class Game : MonoBehaviour
 
     private void SelectionGame() // Выбор типа и уровня игры
     {
-        //Tic
+        //Пользователь за 'Tic', а программа за 'Tac'
         if (Menu.type == 1)
         {
             if (Menu.level == 1)
             {
-                eazyTic.PlayGame();
+                EasyLevelScript.PlayGame("tac");
             }
             else if (Menu.level == 2)
             {
-                normTic.PlayGame();
+                NormalLevelScript.PlayGame("tac");
             }
             else if (Menu.level == 3)
             {
@@ -139,16 +138,16 @@ public class Game : MonoBehaviour
             else
                 Debug.Log("Error: Level?");
         }
-        //Tac
+        // Пользователь за 'Tac', а программа за 'Tic'
         else if (Menu.type == 2)
         {
             if (Menu.level == 1)
             {
-                eazyTac.PlayGame();
+                EasyLevelScript.PlayGame("tic");
             }
             else if (Menu.level == 2)
             {
-                normTac.PlayGame();
+                NormalLevelScript.PlayGame("tic");
             }
             else if (Menu.level == 3)
             {
@@ -167,17 +166,17 @@ public class Game : MonoBehaviour
     private void PrintStatusGame() // Вывод на панель статуса игры
     {
         // Победа TIC
-        if (eazyTic.checkScript.StatusGame() == 1)
+        if (CheckScript.StatusGame() == 1)
         {
             panel.text = "Победа Крестиков!";
         }
         // Победа TAC
-        else if (eazyTic.checkScript.StatusGame() == 2)
+        else if (CheckScript.StatusGame() == 2)
         {
             panel.text = "Победа Ноликов!";
         }
         // Ничья
-        else if (eazyTic.checkScript.StatusGame() == 3)
+        else if (CheckScript.StatusGame() == 3)
         {
             panel.text = "Ничья!";
         }
