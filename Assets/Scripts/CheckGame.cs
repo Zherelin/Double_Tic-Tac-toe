@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using LibraryOfPathPositions;
 
 public class CheckGame : MonoBehaviour
 {
@@ -474,67 +475,80 @@ public class CheckGame : MonoBehaviour
     /// ФУНКЦИИ НАХОЖДЕНИЯ ПУТЕЙ И ИХ ПЕРЕСЕЧЕНИЯ
     ///
 
-    private void FindingPaths(int number1, int number2, int number3, string type, ref List<int> positions) // Поиск возможных путей
+    private void FindingPaths(int number1, int number2, int number3, string type, ref List<PathPositions> positions) // Поиск возможных путей
     {
         AssigningSprites(type);
 
-        if(GameScript.Cell[number1].sprite == _player 
+        if (GameScript.Cell[number1].sprite == _player 
             && (GameScript.Cell[number2].sprite == null || GameScript.Cell[number2].sprite == _player || GameScript.Cell[number2].sprite == _opponent) 
             && (GameScript.Cell[number3].sprite == null || GameScript.Cell[number3].sprite == _player || GameScript.Cell[number3].sprite == _opponent))
         {
-            positions.Add(number2);
-            positions.Add(number3);
+            positions.Add(new PathPositions(number1, number2));
+            positions.Add(new PathPositions(number1, number3));
         }
         if (GameScript.Cell[number2].sprite == _player
             && (GameScript.Cell[number1].sprite == null || GameScript.Cell[number1].sprite == _player || GameScript.Cell[number1].sprite == _opponent)
             && (GameScript.Cell[number3].sprite == null || GameScript.Cell[number3].sprite == _player || GameScript.Cell[number3].sprite == _opponent))
         {
-            positions.Add(number1);
-            positions.Add(number3);
+            positions.Add(new PathPositions(number2, number1));
+            positions.Add(new PathPositions(number2, number3));
         }
         if (GameScript.Cell[number3].sprite == _player
             && (GameScript.Cell[number1].sprite == null || GameScript.Cell[number1].sprite == _player || GameScript.Cell[number1].sprite == _opponent)
             && (GameScript.Cell[number2].sprite == null || GameScript.Cell[number2].sprite == _player || GameScript.Cell[number2].sprite == _opponent))
         {
-            positions.Add(number1);
-            positions.Add(number2);
+            positions.Add(new PathPositions(number3, number1));
+            positions.Add(new PathPositions(number3, number2));
         }
     }
 
-    public void CrossingPaths(string type, ref List<int> positionsCrossingPaths) // Нахождение позиций пересечения путей и добавление их в список
+    private void SearchCrossingPaths(string type, ref List<int> crossingPositions, ref List<int> startPositions) // Нахождение позиций пересечения путей и добавление их в список
     {
-        if(type == "tic" || type == "tac")
+        List<PathPositions> pathPositions = new List<PathPositions>(); // Позиции путей (начало, путь)
+        int numberOfRepetitions; // Кол-во повторений одной позиции
+
+        FindingPaths(0, 1, 2, type, ref pathPositions);
+        FindingPaths(3, 4, 5, type, ref pathPositions);
+        FindingPaths(6, 7, 8, type, ref pathPositions);
+
+        FindingPaths(0, 3, 6, type, ref pathPositions);
+        FindingPaths(1, 4, 7, type, ref pathPositions);
+        FindingPaths(2, 5, 8, type, ref pathPositions);
+
+        FindingPaths(0, 4, 8, type, ref pathPositions);
+        FindingPaths(2, 4, 6, type, ref pathPositions);
+
+        for (int i = 0; i < pathPositions.Count; i++)
         {
-            List<int> positionsPaths = new List<int>(); // Позиции найденых путей
-            int numberOfRepetitions; // Кол-во повторений одной позиции
-
-            FindingPaths(0, 1, 2, type, ref positionsPaths);
-            FindingPaths(3, 4, 5, type, ref positionsPaths);
-            FindingPaths(6, 7, 8, type, ref positionsPaths);
-
-            FindingPaths(0, 3, 6, type, ref positionsPaths);
-            FindingPaths(1, 4, 7, type, ref positionsPaths);
-            FindingPaths(2, 5, 8, type, ref positionsPaths);
-
-            FindingPaths(0, 4, 8, type, ref positionsPaths);
-            FindingPaths(2, 4, 6, type, ref positionsPaths);
-
-            for (int i = 0; i < positionsPaths.Count; i++)
+            numberOfRepetitions = 0;
+            for (int j = 0; j < pathPositions.Count; j++)
             {
-                numberOfRepetitions = 0;
-                for (int j = 0; j < positionsPaths.Count; j++)
-                {
-                    if (positionsPaths[i] == positionsPaths[j])
-                        numberOfRepetitions++;
-                }
+                if (pathPositions[i].Path == pathPositions[j].Path)
+                    numberOfRepetitions++;
+            }
 
-                if (numberOfRepetitions > 1)
-                    positionsCrossingPaths.Add(positionsPaths[i]);
+            if (numberOfRepetitions > 1)
+            {
+                crossingPositions.Add(pathPositions[i].Path);
+                startPositions.Add(pathPositions[i].Beginning);
+                // Возможно нужно добавить отдельную переменную для начальных позиций пересечения!
             }
         }
-        else
-        {
-            Debug.LogWarning("Неверно указанный входной параметр функции 'CrossingPaths'.");
-        }
+    }
+
+    public void CrossingAttack()
+    {
+
+    }
+
+    public void CrossingProtection()
+    {
+
+    }
+
+    public void ProtectionFromCrossing()
+    {
+
     }
 }
+

@@ -16,7 +16,7 @@ public class HardTicGame : MonoBehaviour
             int protection = checkScript.ProtectionStrategyHard("tac"); // функций выигрыша и проигрыша
 
             List<int> positionsCrossingPaths = new List<int>();
-            checkScript.CrossingPaths("tic", ref positionsCrossingPaths);
+            // checkScript.SearchCrossingPaths("tic", ref positionsCrossingPaths);
 
             List<int> losingPositionsProtect = new List<int>();
             checkScript.ProtectionFromLosingPosition("tac", ref losingPositionsProtect, gameScript.Cell);
@@ -101,13 +101,7 @@ public class HardTicGame : MonoBehaviour
                 int randomCell = Random.Range(0, 8);
                 bool cellNull = false; // —одержит ли поле хот€ бы одну пустую €чейку
                 bool cellTic = false; // —одержит ли поле хот€ бы одну €чейку дл€ перекрыти€
-                bool notLosingPosProtect = true; //
                 int countNull = 0; //  ол-во пустых €чеек
-
-                if (losingPositionsProtect.Count > 0)
-                    notLosingPosProtect = false;
-                else
-                    notLosingPosProtect = true;
 
                 for (int i = 0; i < 9; i++)
                 {
