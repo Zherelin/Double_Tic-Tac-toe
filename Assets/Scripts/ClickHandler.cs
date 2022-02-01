@@ -29,7 +29,7 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                 }
                 //Exception
                 else
-                    Debug.Log("Невозможно добавить значение в ячейку!");
+                    GameScript.MessagePanel.text = "Невозможно добавить значение в ячейку!";
             }
             //Tac
             else if (Menu.type == 2)
@@ -49,10 +49,10 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                 }
                 //Exception
                 else
-                    Debug.Log("Невозможно добавить значение в ячейку!");
+                    GameScript.MessagePanel.text = "Невозможно добавить значение в ячейку!";
             }
             else
-                Debug.LogWarning("Тип игрока неопределён!");
+                GameScript.MessagePanel.text = "Тип игрока неопределён!";
         }
     }
 }

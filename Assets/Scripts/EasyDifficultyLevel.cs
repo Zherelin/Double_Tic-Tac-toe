@@ -81,7 +81,8 @@ public class EasyDifficultyLevel : MonoBehaviour
                         GameScript.Cell[randomCell].sprite = _playerClosing;
                         OverlapDeduction();
                     }
-                    else Debug.Log("Пропуск хода");
+                    else 
+                        GameScript.MessagePanel.text = "Пропуск хода";
                 }
             }
 

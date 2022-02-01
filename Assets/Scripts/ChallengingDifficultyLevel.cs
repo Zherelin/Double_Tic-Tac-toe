@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -53,6 +52,13 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     }
                 }
 
+                // Атака при пересечении
+                else if(CheckScript.CrossingAttack(typePlayer, ref GameScript.Cell) != -1 && _playerOverlaps > 0)
+                {
+                    GameScript.Cell[CheckScript.CrossingAttack(typePlayer, ref GameScript.Cell)].sprite = _playerClosing;
+                    OverlapDeduction();
+                }
+
                 // Заведома проигрышная позиция соперника
                 else if (CheckScript.LosingPosition(typePlayer) != -1)
                 {
@@ -67,6 +73,13 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     OverlapDeduction();
                 }
 
+                // Защита при пересечении
+                else if(CheckScript.CrossingProtection(typePlayer, ref GameScript.Cell) != -1 && _playerOverlaps > 0)
+                {
+                    GameScript.Cell[CheckScript.CrossingProtection(typePlayer, ref GameScript.Cell)].sprite = _playerClosing;
+                    OverlapDeduction();
+                }
+
                 // Случайный ход
                 else
                 {
@@ -77,6 +90,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
 
                     List<int> losingPositions = new List<int>(); // Проигрышные позиции
                     CheckScript.ProtectionFromLosingPosition(typePlayer, ref losingPositions, GameScript.Cell);
+                    CheckScript.ProtectionFromCrossing(typePlayer, ref losingPositions, GameScript.Cell);
 
                     for (int number = 0; number < 9; number++) // Анализ поля
                     {
@@ -118,7 +132,8 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                         }
                         GameScript.Cell[randomCell].sprite = _player;
                     }
-                    else Debug.Log("Пропуск хода");
+                    else
+                        GameScript.MessagePanel.text = "Пропуск хода";
 
 
                     // Является ли позиция проигрышной

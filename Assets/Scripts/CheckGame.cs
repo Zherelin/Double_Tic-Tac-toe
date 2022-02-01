@@ -88,7 +88,7 @@ public class CheckGame : MonoBehaviour
         else if (CheckingTheFieldForVictory(2, 4, 6, "tac"))
             return 2;
 
-        // Проверка на ничью !!! Дописать проверку на занятость поля !!
+        // Проверка на ничью
         else if (Game.overlapsTic < 1 && Game.overlapsTac < 1 && IsFieldEmpty() == false)
             return 3;
 
@@ -333,8 +333,6 @@ public class CheckGame : MonoBehaviour
             // Выбор наилучшей ячейки для защиты
             if (protect.Count > 0)
             {
-                // Дописать стратегию защиты !!!
-
                 bool isThereBestPosition = false; // Есть ли наилучшая позиция защиты
                 int bestPosition = 0; // Наулучшая позиция защиты
 
@@ -475,48 +473,48 @@ public class CheckGame : MonoBehaviour
     /// ФУНКЦИИ НАХОЖДЕНИЯ ПУТЕЙ И ИХ ПЕРЕСЕЧЕНИЯ
     ///
 
-    private void FindingPaths(int number1, int number2, int number3, string type, ref List<PathPositions> positions) // Поиск возможных путей
+    private void FindingPaths(int number1, int number2, int number3, string type, ref List<PathPositions> positions, ref Image[] cell) // Поиск возможных путей
     {
         AssigningSprites(type);
 
-        if (GameScript.Cell[number1].sprite == _player 
-            && (GameScript.Cell[number2].sprite == null || GameScript.Cell[number2].sprite == _player || GameScript.Cell[number2].sprite == _opponent) 
-            && (GameScript.Cell[number3].sprite == null || GameScript.Cell[number3].sprite == _player || GameScript.Cell[number3].sprite == _opponent))
+        if (cell[number1].sprite == _player 
+            && (cell[number2].sprite == null || cell[number2].sprite == _player || cell[number2].sprite == _opponent) 
+            && (cell[number3].sprite == null || cell[number3].sprite == _player || cell[number3].sprite == _opponent))
         {
             positions.Add(new PathPositions(number1, number2));
             positions.Add(new PathPositions(number1, number3));
         }
-        if (GameScript.Cell[number2].sprite == _player
-            && (GameScript.Cell[number1].sprite == null || GameScript.Cell[number1].sprite == _player || GameScript.Cell[number1].sprite == _opponent)
-            && (GameScript.Cell[number3].sprite == null || GameScript.Cell[number3].sprite == _player || GameScript.Cell[number3].sprite == _opponent))
+        if (cell[number2].sprite == _player
+            && (cell[number1].sprite == null || cell[number1].sprite == _player || cell[number1].sprite == _opponent)
+            && (cell[number3].sprite == null || cell[number3].sprite == _player || cell[number3].sprite == _opponent))
         {
             positions.Add(new PathPositions(number2, number1));
             positions.Add(new PathPositions(number2, number3));
         }
-        if (GameScript.Cell[number3].sprite == _player
-            && (GameScript.Cell[number1].sprite == null || GameScript.Cell[number1].sprite == _player || GameScript.Cell[number1].sprite == _opponent)
-            && (GameScript.Cell[number2].sprite == null || GameScript.Cell[number2].sprite == _player || GameScript.Cell[number2].sprite == _opponent))
+        if (cell[number3].sprite == _player
+            && (cell[number1].sprite == null || cell[number1].sprite == _player || cell[number1].sprite == _opponent)
+            && (cell[number2].sprite == null || cell[number2].sprite == _player || cell[number2].sprite == _opponent))
         {
             positions.Add(new PathPositions(number3, number1));
             positions.Add(new PathPositions(number3, number2));
         }
     }
 
-    private void SearchCrossingPaths(string type, ref List<int> crossingPositions, ref List<int> startPositions) // Нахождение позиций пересечения путей и добавление их в список
+    private void SearchCrossingPaths(string type, ref List<int> crossingPositions, ref List<int> startPositions, ref Image[] cell) // Нахождение позиций пересечения путей и добавление их в список
     {
         List<PathPositions> pathPositions = new List<PathPositions>(); // Позиции путей (начало, путь)
         int numberOfRepetitions; // Кол-во повторений одной позиции
 
-        FindingPaths(0, 1, 2, type, ref pathPositions);
-        FindingPaths(3, 4, 5, type, ref pathPositions);
-        FindingPaths(6, 7, 8, type, ref pathPositions);
+        FindingPaths(0, 1, 2, type, ref pathPositions, ref cell);
+        FindingPaths(3, 4, 5, type, ref pathPositions, ref cell);
+        FindingPaths(6, 7, 8, type, ref pathPositions, ref cell);
 
-        FindingPaths(0, 3, 6, type, ref pathPositions);
-        FindingPaths(1, 4, 7, type, ref pathPositions);
-        FindingPaths(2, 5, 8, type, ref pathPositions);
+        FindingPaths(0, 3, 6, type, ref pathPositions, ref cell);
+        FindingPaths(1, 4, 7, type, ref pathPositions, ref cell);
+        FindingPaths(2, 5, 8, type, ref pathPositions, ref cell);
 
-        FindingPaths(0, 4, 8, type, ref pathPositions);
-        FindingPaths(2, 4, 6, type, ref pathPositions);
+        FindingPaths(0, 4, 8, type, ref pathPositions, ref cell);
+        FindingPaths(2, 4, 6, type, ref pathPositions, ref cell);
 
         for (int i = 0; i < pathPositions.Count; i++)
         {
@@ -531,24 +529,97 @@ public class CheckGame : MonoBehaviour
             {
                 crossingPositions.Add(pathPositions[i].Path);
                 startPositions.Add(pathPositions[i].Beginning);
-                // Возможно нужно добавить отдельную переменную для начальных позиций пересечения!
             }
         }
     }
 
-    public void CrossingAttack()
+    public int CrossingAttack(string type, ref Image[] cell)
     {
+        if(type == "tic" || type == "tac")
+        {
+            List<int> crossingPositions = new List<int>();
+            List<int> startPositions = new List<int>();
 
+            SearchCrossingPaths(type, ref crossingPositions, ref startPositions, ref cell);
+
+            if (crossingPositions.Count > 0)
+            {
+                int attackPosition = -1;
+                foreach (int number in crossingPositions)
+                {
+                    if (GameScript.Cell[number].sprite == _opponent)
+                        attackPosition = number;
+                }
+                return attackPosition;
+            }
+            else
+                return -1;
+        }
+        else
+        {
+            Debug.LogWarning("Неверно указанный входной параметр функции 'CrossingAttack'.");
+            return -1;
+        }
     }
 
-    public void CrossingProtection()
+    public int CrossingProtection(string type, ref Image[] cell)
     {
+        if (type == "tic" || type == "tac")
+        {
+            string typeOpponent;
+            List<int> crossingPositions = new List<int>();
+            List<int> startPositions = new List<int>();
 
+            if (type == "tic")
+                typeOpponent = "tac";
+            else
+                typeOpponent = "tic";
+
+            SearchCrossingPaths(typeOpponent, ref crossingPositions, ref startPositions, ref cell);
+
+            AssigningSprites(type);
+
+            if (crossingPositions.Count > 0)
+            {
+                int protectionPosition = -1;
+                foreach (int number in crossingPositions)
+                {
+                    if (cell[number].sprite == _player)
+                        protectionPosition = startPositions[Random.Range(0, startPositions.Count)];
+                }
+                return protectionPosition;
+            }
+            else
+                return -1;
+        }
+        else
+        {
+            Debug.LogWarning("Неверно указанный входной параметр функции 'CrossingAttack'.");
+            return -1;
+        }
     }
 
-    public void ProtectionFromCrossing()
+    public void ProtectionFromCrossing(string type, ref List<int> protectionFromCrossing, Image[] cell)
     {
+        if(type == "tic" || type == "tac")
+        {
+            AssigningSprites(type);
 
+            for(int number = 0; number < 9; number++)
+                if(cell[number].sprite == null)
+                {
+                    cell[number].sprite = _player;
+
+                    if (CrossingProtection(type, ref cell) != -1 && _opponentOverlaps > 0)
+                        protectionFromCrossing.Add(number);
+
+                    cell[number].sprite = null;
+                }
+        }
+        else
+        {
+            Debug.LogWarning("Неверно указанный входной параметр функции 'ProtectionFromCrossing'.");
+        }
     }
 }
 

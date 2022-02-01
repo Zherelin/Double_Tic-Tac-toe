@@ -11,8 +11,6 @@ public class NormalDifficultyLevel : MonoBehaviour
     private Sprite _opponent;
     private int _playerOverlaps;
 
-    List<int[]> popa = new List<int[]>(1);
-
     public void PlayGame(string typePlayer)
     {
         // Логика игры при лёгком уровне сложности
@@ -20,18 +18,6 @@ public class NormalDifficultyLevel : MonoBehaviour
         if (typePlayer == "tic" || typePlayer == "tac")
         {
             AssigningSprites(typePlayer); // Назначение спрайтов
-
-            foreach(var opa in popa)
-            {
-                opa[0] = 1;
-                opa[1] = 2;
-            }
-
-            foreach (var opa in popa)
-            {
-                Debug.Log(opa[0]);
-                Debug.Log(opa[1]);
-            }
 
             if (CheckScript.StatusGame() == 0) // Проверка на то, что игра продолжается
             {
@@ -131,7 +117,8 @@ public class NormalDifficultyLevel : MonoBehaviour
                         }
                         GameScript.Cell[randomCell].sprite = _player;
                     }
-                    else Debug.Log("Пропуск хода");
+                    else
+                        GameScript.MessagePanel.text = "Пропуск хода";
 
 
                     // Является ли позиция проигрышной

@@ -5,26 +5,29 @@ using System.Collections;
 
 public class Game : MonoBehaviour
 {
-    public static int overlapsTic; // Кол-во возможных перекрытий
-    public static int overlapsTac; //
-    int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений (отобр. на панели)
-
     public Sprite Tic;        // Переменные для спрайтов
     public Sprite Tac;        //
     public Sprite ClosingTic; //
     public Sprite ClosingTac; //
+    
     public Image[] Cell; // Игровое поле
     public Image[] OverlapsBarPlayer;   // Отображение кол-во перекрытий
     public Image[] OverlapsBarOpponent; // на панели
 
-    public Text panel; // ???
-    public bool move; // Разрешение на ход
-    private int typePlayer; //
-    private int typeEnemy;  // Какой тип игрока и соперника
+    public Text MessagePanel;
+    public Text GameTypePanel;
+
+    [HideInInspector] public bool move; // Разрешение на ход
+    public static int overlapsTic; // Кол-во возможных перекрытий
+    public static int overlapsTac; //
+    private int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений (отобр. на панели)
+
+    private int typePlayer;    //
+    private int typeOpponent;  // Какой тип игрока и соперника
 
     [SerializeField] private EasyDifficultyLevel EasyLevelScript;
     [SerializeField] private NormalDifficultyLevel NormalLevelScript;
-    public HardTicGame hardTic; //
+    [SerializeField] private ChallengingDifficultyLevel ChallengLevelScript;
     [SerializeField] private CheckGame CheckScript;
 
     public void Start()
@@ -32,20 +35,25 @@ public class Game : MonoBehaviour
         startOverlaps = 3; // Начальное кол-во отображений перекрытий на панели
         overlapsTic = startOverlaps; // Начальное кол-во перекрытий
         overlapsTac = startOverlaps; //
-        panel.text = "Игра началась!";
 
-        if (Menu.type == 2 && Menu.level == 1)
-            Cell[4].sprite = Tic;
-        if(Menu.type == 2 && Menu.level == 2)
+        MessagePanel.text = "Игра Началась!";
+        ShowLevel();
+
+        // Первых ход крестиков
+        if (Menu.type == 2)
         {
-            int randomCell = Random.Range(0, 8);
-            while(Cell[randomCell].sprite != null || randomCell == 4)
-                randomCell = Random.Range(0, 8);
-            Cell[randomCell].sprite = Tic;
+            if(Menu.level == 1)
+            {
+                Cell[Random.Range(0, 8)].sprite = Tic;
+            }
+            else if(Menu.level == 2 || Menu.level == 3)
+            {
+                int randomCell = Random.Range(0, 8);
+                while (randomCell == 4)
+                    randomCell = Random.Range(0, 8);
+                Cell[randomCell].sprite = Tic;
+            }
         }
-
-        // !!! Дописать логику постановки крестика на сложных уровнях !!!
-
 
         // Назначение типа отображения перекрытий
         if(Menu.type == 1)
@@ -57,7 +65,7 @@ public class Game : MonoBehaviour
             }
 
             typePlayer = 1;
-            typeEnemy = 2;
+            typeOpponent = 2;
         }
 
         if(Menu.type == 2)
@@ -69,7 +77,7 @@ public class Game : MonoBehaviour
             }
 
             typePlayer = 2;
-            typeEnemy = 1;
+            typeOpponent = 1;
         }
 
         StartCoroutine(StartGame());
@@ -104,14 +112,14 @@ public class Game : MonoBehaviour
                 move = true;
                 yield return new WaitUntil(() => move == false);
 
-                if (CheckMove(typeEnemy) == true)
+                if (CheckMove(typeOpponent) == true)
                 {
                     Invoke("SelectionGame", 0.5f);
                 }
 
                 PrintStatusGame();
             }
-            else if (CheckMove(typeEnemy) == true)
+            else if (CheckMove(typeOpponent) == true)
             {
                 Invoke("SelectionGame", 0.5f);
             }
@@ -134,10 +142,10 @@ public class Game : MonoBehaviour
             }
             else if (Menu.level == 3)
             {
-                hardTic.PlayGame();
+                ChallengLevelScript.PlayGame("tac");
             }
             else
-                Debug.Log("Error: Level?");
+                Debug.LogWarning("Уровень не определён");
         }
         // Пользователь за 'Tac', а программа за 'Tic'
         else if (Menu.type == 2)
@@ -152,13 +160,13 @@ public class Game : MonoBehaviour
             }
             else if (Menu.level == 3)
             {
-                Debug.Log("He!");
+                ChallengLevelScript.PlayGame("tic");
             }
             else
-                Debug.Log("Error: Level?");
+                Debug.LogWarning("Уровень не определён");
         }
         else
-            Debug.Log("Error: Type Player?");
+            Debug.LogWarning("Тип игрока не определён");
 
 
         PrintStatusGame();
@@ -169,31 +177,23 @@ public class Game : MonoBehaviour
         // Победа TIC
         if (CheckScript.StatusGame() == 1)
         {
-            panel.text = "Победа Крестиков!";
+            MessagePanel.text = "Победа Крестиков!";
         }
         // Победа TAC
         else if (CheckScript.StatusGame() == 2)
         {
-            panel.text = "Победа Ноликов!";
+            MessagePanel.text = "Победа Ноликов!";
         }
         // Ничья
         else if (CheckScript.StatusGame() == 3)
         {
-            panel.text = "Ничья!";
+            MessagePanel.text = "Ничья!";
         }
     }
 
     public void BackMenu() // Переход в меню
     { 
         SceneManager.LoadScene(0); 
-    }
-
-    public void SetGame() // ??? Временно !!!
-    {
-        if (Menu.type == 1 || Menu.type == 2)
-            panel.text = "Type = " + Menu.type + ": Level = " + Menu.level;
-        else
-            panel.text = "Error: The type of player is not defined";
     }
 
     public void RestartGame()
@@ -242,5 +242,17 @@ public class Game : MonoBehaviour
             return true;
         else
             return false;
+    }
+
+    private void ShowLevel()
+    {
+        if (Menu.level == 1)
+            GameTypePanel.text = "Легкий";
+        else if (Menu.level == 2)
+            GameTypePanel.text = "Нормальный";
+        else if (Menu.level == 3)
+            GameTypePanel.text = "Сложный";
+        else
+            GameTypePanel.text = "?";
     }
 }
