@@ -83,7 +83,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                 // Случайный ход
                 else
                 {
-                    int randomCell = Random.Range(0, 8);
+                    int randomCell = Random.Range(0, 9);
                     bool isThereAnEmptyCell = false; // Есть ли пустая ячейка
                     bool isThereAnOpponentCell = false; // Есть ли ячейка противника
                     bool isThereNonLosingCell = false; // Есть ли хотя бы одна не проигрышная позиция
@@ -109,7 +109,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     {
                         while (GameScript.Cell[randomCell].sprite != null || IsThisLosingPosition(randomCell) == true)
                         {
-                            randomCell = Random.Range(0, 8);
+                            randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _player;
                     }
@@ -118,7 +118,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     {
                         while (GameScript.Cell[randomCell].sprite != _opponent)
                         {
-                            randomCell = Random.Range(0, 8);
+                            randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _playerClosing;
                         OverlapDeduction();
@@ -128,7 +128,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     {
                         while (GameScript.Cell[randomCell].sprite != null)
                         {
-                            randomCell = Random.Range(0, 8);
+                            randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _player;
                     }

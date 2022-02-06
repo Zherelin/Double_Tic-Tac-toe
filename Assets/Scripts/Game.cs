@@ -8,33 +8,33 @@ public class Game : MonoBehaviour
     public Sprite Tic;        // Переменные для спрайтов
     public Sprite Tac;        //
     public Sprite ClosingTic; //
-    public Sprite ClosingTac; //
-    
+    public Sprite ClosingTac; // 
     public Image[] Cell; // Игровое поле
-    public Image[] OverlapsBarPlayer;   // Отображение кол-во перекрытий
-    public Image[] OverlapsBarOpponent; // на панели
 
     public Text MessagePanel;
     public Text GameTypePanel;
 
     [HideInInspector] public bool move; // Разрешение на ход
+    [HideInInspector] public int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений
     public static int overlapsTic; // Кол-во возможных перекрытий
     public static int overlapsTac; //
-    private int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений (отобр. на панели)
 
-    private int typePlayer;    //
-    private int typeOpponent;  // Какой тип игрока и соперника
+    private string typePlayer;    //
+    private string typeOpponent;  // Какой тип игрока и соперника
 
     [SerializeField] private EasyDifficultyLevel EasyLevelScript;
     [SerializeField] private NormalDifficultyLevel NormalLevelScript;
     [SerializeField] private ChallengingDifficultyLevel ChallengLevelScript;
     [SerializeField] private CheckGame CheckScript;
+    [SerializeField] private OverlapsBar OverlapsBar;
 
     public void Start()
     {
-        startOverlaps = 3; // Начальное кол-во отображений перекрытий на панели
+        startOverlaps = 3; // Начальное кол-во отображений перекрытий
         overlapsTic = startOverlaps; // Начальное кол-во перекрытий
         overlapsTac = startOverlaps; //
+
+        OverlapsBar.ConnectingOverlapPanel(); // 
 
         MessagePanel.text = "Игра Началась!";
         ShowLevel();
@@ -42,11 +42,11 @@ public class Game : MonoBehaviour
         // Первых ход крестиков
         if (Menu.type == 2)
         {
-            if(Menu.level == 1)
+            if (Menu.level == 1)
             {
                 Cell[Random.Range(0, 8)].sprite = Tic;
             }
-            else if(Menu.level == 2 || Menu.level == 3)
+            else if (Menu.level == 2 || Menu.level == 3)
             {
                 int randomCell = Random.Range(0, 8);
                 while (randomCell == 4)
@@ -55,76 +55,64 @@ public class Game : MonoBehaviour
             }
         }
 
-        // Назначение типа отображения перекрытий
-        if(Menu.type == 1)
+        // Определение типа игроков
+        if (Menu.type == 1)
         {
-            for (int i = 0; i < startOverlaps; i++)
-            {
-                OverlapsBarPlayer[i].sprite = Tic;
-                OverlapsBarOpponent[i].sprite = Tac;
-            }
-
-            typePlayer = 1;
-            typeOpponent = 2;
+            typePlayer = "tic";
+            typeOpponent = "tac";
         }
 
         if(Menu.type == 2)
         {
-            for(int i = 0; i < startOverlaps; i++)
-            {
-                OverlapsBarPlayer[i].sprite = Tac;
-                OverlapsBarOpponent[i].sprite = Tic;
-            }
-
-            typePlayer = 2;
-            typeOpponent = 1;
+            typePlayer = "tac";
+            typeOpponent = "tic";
         }
 
-        StartCoroutine(StartGame());
-    }
-
-    public void Update()
-    {
-        // Проверка изменения кол-ва перекрытий и отключения лишних спрайтов на панели
-        if(Menu.type == 1)
-        {
-            if (startOverlaps != overlapsTic)
-                OverlapsBarPlayer[overlapsTic].gameObject.SetActive(false);
-            if (startOverlaps != overlapsTac)
-                OverlapsBarOpponent[overlapsTac].gameObject.SetActive(false);
+        if (Menu.type == 1 || Menu.type == 2)
+        { 
+            StartCoroutine(StartGame()); 
         }
-
-        if (Menu.type == 2)
-        {
-            if (startOverlaps != overlapsTac)
-                OverlapsBarPlayer[overlapsTac].gameObject.SetActive(false);
-            if (startOverlaps != overlapsTic)
-                OverlapsBarOpponent[overlapsTic].gameObject.SetActive(false);
-        }
+        else
+            Debug.LogWarning("Тип игрока неопределён!");
     }
 
     private IEnumerator StartGame()
     {
+        int test = 0; // TEST
+
         while (CheckScript.StatusGame() == 0)
         {
-            if (CheckMove(typePlayer) == true)
+            bool isMovePlayer = IsPossibleToMakeMove(typePlayer);
+            bool isMoveOpponent = IsPossibleToMakeMove(typeOpponent);
+
+            if (isMovePlayer == true)
             {
                 move = true;
                 yield return new WaitUntil(() => move == false);
 
-                if (CheckMove(typeOpponent) == true)
+                if (IsPossibleToMakeMove(typeOpponent) == true)
                 {
-                    Invoke("SelectionGame", 0.5f);
+                    //yield return new WaitForSeconds(0.5f);
+                    SelectionGame();
                 }
 
                 PrintStatusGame();
             }
-            else if (CheckMove(typeOpponent) == true)
+            else if (isMoveOpponent == true)
             {
-                Invoke("SelectionGame", 0.5f);
+                //yield return new WaitForSeconds(0.5f);
+                SelectionGame();
             }
+
+            // TEST
+            test++;
+            if(test > 50)
+            {
+                Debug.LogWarning("Ошибка в StartGame");
+                break;
+            }
+            //
         }
-        // Логика игры для соперника при отсутствии хода игрока!!!
     }
 
     private void SelectionGame() // Выбор типа и уровня игры
@@ -202,46 +190,52 @@ public class Game : MonoBehaviour
         for (int i = 0; i < 9; i++)
             Cell[i].sprite = null;
 
-        // Включение спрайтов на панели
-        for (int i = 0; i < startOverlaps; i++)
-        {
-            OverlapsBarPlayer[i].gameObject.SetActive(true);
-            OverlapsBarOpponent[i].gameObject.SetActive(true);
-        }
-
         Start();
     }
 
-    private bool CheckMove(int type) // Проверка на возможность сделать ход
+    private bool IsPossibleToMakeMove(string type) // Проверка на возможность сделать ход
     {
-        Sprite enemy = null; 
+        Sprite opponent = null; 
         int playerOverlaps = 0;
-        bool cellNull = false; // Показатель свободных ячеек для хода
-        bool cellEnemy = false; // Показатель занятых ячеек для хода
+        bool isEmptyCell = false; // Показатель свободных ячеек для хода
+        bool isOpponentCell = false; // Показатель занятых ячеек для хода
 
-        if(type == 1) // Tic
+        if(type == "tic" || type == "tac")
         {
-            enemy = Tac;
-            playerOverlaps = overlapsTic;
-        }
-        if(type == 2) // Tac
-        {
-            enemy = Tic;
-            playerOverlaps = overlapsTac;
-        }
+            if (type == "tic")
+            {
+                opponent = Tac;
+                playerOverlaps = overlapsTic;
+            }
+            if (type == "tac")
+            {
+                opponent = Tic;
+                playerOverlaps = overlapsTac;
+            }
 
-        for(int i = 0; i < 9; i++)
-        {
-            if (Cell[i].sprite == null)
-                cellNull = true;
-            if (Cell[i].sprite == enemy && playerOverlaps > 0)
-                cellEnemy = true;
-        }
+            for (int number = 0; number < 9; number++)
+            {
+                if (Cell[number].sprite == null)
+                {
+                    isEmptyCell = true;
+                }
+                if (Cell[number].sprite == opponent && playerOverlaps > 0)
+                {
+                    isOpponentCell = true;
+                }
+            }
 
-        if (cellNull == true || cellEnemy == true)
-            return true;
+            if (isEmptyCell == true || isOpponentCell == true)
+                return true;
+            else
+                return false;
+        }
+        //
         else
+        {
+            Debug.LogWarning("Ошибка во входном параметре 'IsPossibleToMakeMove'. Входной параметр: " + type);
             return false;
+        }
     }
 
     private void ShowLevel()

@@ -54,7 +54,7 @@ public class EasyDifficultyLevel : MonoBehaviour
                 // Случайный ход
                 else
                 {
-                    int randomCell = Random.Range(0, 8);
+                    int randomCell = Random.Range(0, 9);
                     bool isThereAnEmptyCell = false; // Есть ли пустая ячейка
                     bool isThereAnOpponentCell = false; // Есть ли ячейка противника
 
@@ -69,14 +69,18 @@ public class EasyDifficultyLevel : MonoBehaviour
                     if (isThereAnEmptyCell == true)
                     {
                         while (GameScript.Cell[randomCell].sprite != null)
-                            randomCell = Random.Range(0, 8);
-
+                        {
+                            randomCell = Random.Range(0, 9);
+                        }
+                         
                         GameScript.Cell[randomCell].sprite = _player;
                     }
                     else if (isThereAnOpponentCell == true)
                     {
                         while (GameScript.Cell[randomCell].sprite != _opponent)
-                            randomCell = Random.Range(0, 8);
+                        {
+                            randomCell = Random.Range(0, 9);
+                        }
 
                         GameScript.Cell[randomCell].sprite = _playerClosing;
                         OverlapDeduction();

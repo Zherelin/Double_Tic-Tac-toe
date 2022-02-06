@@ -366,20 +366,32 @@ public class CheckGame : MonoBehaviour
     {
         AssigningSprites(type);
 
-        if (cell[number1].sprite == _playerClosing && cell[number2].sprite == _opponent && cell[number3] != _opponentClosing)
+        if (cell[number1].sprite == _playerClosing && cell[number2].sprite == _opponent && cell[number3].sprite != _opponentClosing) 
+        {
             positions.Add(number2);
-        else if (cell[number1].sprite == _playerClosing && cell[number3].sprite == _opponent && cell[number2] != _opponentClosing)
+        }
+        else if (cell[number1].sprite == _playerClosing && cell[number3].sprite == _opponent && cell[number2].sprite != _opponentClosing) 
+        {
             positions.Add(number3);
+        }
 
-        else if (cell[number2].sprite == _playerClosing && cell[number1].sprite == _opponent && cell[number3] != _opponentClosing)
+        else if (cell[number2].sprite == _playerClosing && cell[number1].sprite == _opponent && cell[number3].sprite != _opponentClosing)
+        {
             positions.Add(number1);
-        else if (cell[number2].sprite == _playerClosing && cell[number3].sprite == _opponent && cell[number1] != _opponentClosing)
+        }
+        else if (cell[number2].sprite == _playerClosing && cell[number3].sprite == _opponent && cell[number1].sprite != _opponentClosing) 
+        {
             positions.Add(number3);
+        }
 
-        else if (cell[number3].sprite == _playerClosing && cell[number1].sprite == _opponent && cell[number2] != _opponentClosing)
+        else if (cell[number3].sprite == _playerClosing && cell[number1].sprite == _opponent && cell[number2].sprite != _opponentClosing) 
+        {
             positions.Add(number1);
-        else if (cell[number3].sprite == _playerClosing && cell[number2].sprite == _opponent && cell[number1] != _opponentClosing)
+        }
+        else if (cell[number3].sprite == _playerClosing && cell[number2].sprite == _opponent && cell[number1].sprite != _opponentClosing)
+        {
             positions.Add(number2);
+        }
 
         //
         if (cell[number1].sprite == _opponent && cell[number2].sprite == _opponent && cell[number3].sprite == null)

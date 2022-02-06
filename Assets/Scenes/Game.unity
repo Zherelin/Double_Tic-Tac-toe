@@ -2277,6 +2277,7 @@ GameObject:
   - component: {fileID: 1899768282}
   - component: {fileID: 1899768284}
   - component: {fileID: 1899768285}
+  - component: {fileID: 1899768286}
   m_Layer: 5
   m_Name: Game
   m_TagString: Untagged
@@ -2336,21 +2337,15 @@ MonoBehaviour:
   - {fileID: 905775772}
   - {fileID: 901102435}
   - {fileID: 802006307}
-  OverlapsBarPlayer:
-  - {fileID: 318728194}
-  - {fileID: 923214293}
-  - {fileID: 1920941929}
-  OverlapsBarOpponent:
-  - {fileID: 1545950548}
-  - {fileID: 740030943}
-  - {fileID: 970350890}
   MessagePanel: {fileID: 1595104182}
   GameTypePanel: {fileID: 578635417}
   move: 0
+  startOverlaps: 0
   EasyLevelScript: {fileID: 1899768282}
   NormalLevelScript: {fileID: 1899768284}
   ChallengLevelScript: {fileID: 1899768285}
   CheckScript: {fileID: 1899768283}
+  OverlapsBar: {fileID: 1899768286}
 --- !u!114 &1899768282
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2406,6 +2401,27 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   GameScript: {fileID: 1899768281}
   CheckScript: {fileID: 1899768283}
+--- !u!114 &1899768286
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1899768279}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4b50207684acf564c8aaa73a820c6d01, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GameScript: {fileID: 1899768281}
+  OverlapsBarPlayer:
+  - {fileID: 318728194}
+  - {fileID: 923214293}
+  - {fileID: 1920941929}
+  OverlapsBarOpponent:
+  - {fileID: 970350890}
+  - {fileID: 740030943}
+  - {fileID: 1545950548}
 --- !u!1 &1920941927
 GameObject:
   m_ObjectHideFlags: 0

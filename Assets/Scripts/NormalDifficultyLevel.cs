@@ -13,7 +13,7 @@ public class NormalDifficultyLevel : MonoBehaviour
 
     public void PlayGame(string typePlayer)
     {
-        // Логика игры при лёгком уровне сложности
+        // Логика игры при нормальном уровне сложности
         //
         if (typePlayer == "tic" || typePlayer == "tac")
         {
@@ -21,8 +21,9 @@ public class NormalDifficultyLevel : MonoBehaviour
 
             if (CheckScript.StatusGame() == 0) // Проверка на то, что игра продолжается
             {
-                int winning = CheckScript.AttackStrategy(typePlayer);            // Результат выигрышного хода
+                int winning = CheckScript.AttackStrategy(typePlayer);              // Результат выигрышного хода
                 int protection = CheckScript.ProtectionStrategyNormal(typePlayer); // Результат защиты
+                int losing = CheckScript.LosingPosition(typePlayer);
 
                 // Выигрышный ход
                 if (winning != -1)
@@ -53,9 +54,9 @@ public class NormalDifficultyLevel : MonoBehaviour
                 }
 
                 // Заведома проигрышная позиция соперника
-                else if (CheckScript.LosingPosition(typePlayer) != -1)
+                else if (losing != -1)
                 {
-                    GameScript.Cell[CheckScript.LosingPosition(typePlayer)].sprite = _playerClosing;
+                    GameScript.Cell[losing].sprite = _playerClosing;
                     OverlapDeduction();
                 }
 
@@ -69,7 +70,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                 // Случайный ход
                 else
                 {
-                    int randomCell = Random.Range(0, 8);
+                    int randomCell = Random.Range(0, 9);
                     bool isThereAnEmptyCell = false; // Есть ли пустая ячейка
                     bool isThereAnOpponentCell = false; // Есть ли ячейка противника
                     bool isThereNonLosingCell = false; // Есть ли хотя бы одна не проигрышная позиция
@@ -94,7 +95,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                     {
                         while (GameScript.Cell[randomCell].sprite != null || IsThisLosingPosition(randomCell) == true)
                         {
-                            randomCell = Random.Range(0, 8);
+                            randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _player;
                     }
@@ -103,7 +104,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                     {
                         while (GameScript.Cell[randomCell].sprite != _opponent)
                         {
-                            randomCell = Random.Range(0, 8);
+                            randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _playerClosing;
                         OverlapDeduction();
@@ -113,7 +114,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                     {
                         while (GameScript.Cell[randomCell].sprite != null)
                         {
-                            randomCell = Random.Range(0, 8);
+                            randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _player;
                     }
