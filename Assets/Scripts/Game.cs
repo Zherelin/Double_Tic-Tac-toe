@@ -28,6 +28,8 @@ public class Game : MonoBehaviour
     [SerializeField] private CheckGame CheckScript;
     [SerializeField] private OverlapsBar OverlapsBar;
 
+    private Coroutine _startGame;
+
     public void Start()
     {
         startOverlaps = 3; // Начальное кол-во отображений перекрытий
@@ -70,7 +72,7 @@ public class Game : MonoBehaviour
 
         if (Menu.type == 1 || Menu.type == 2)
         { 
-            StartCoroutine(StartGame()); 
+            _startGame = StartCoroutine(StartGame()); 
         }
         else
             Debug.LogWarning("Тип игрока неопределён!");
@@ -92,7 +94,7 @@ public class Game : MonoBehaviour
 
                 if (IsPossibleToMakeMove(typeOpponent) == true)
                 {
-                    //yield return new WaitForSeconds(0.5f);
+                    yield return new WaitForSeconds(0.5f);
                     SelectionGame();
                 }
 
@@ -100,7 +102,7 @@ public class Game : MonoBehaviour
             }
             else if (isMoveOpponent == true)
             {
-                //yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(0.5f);
                 SelectionGame();
             }
 
@@ -186,6 +188,8 @@ public class Game : MonoBehaviour
 
     public void RestartGame()
     {
+        StopCoroutine(_startGame);
+
         // Очистка поля
         for (int i = 0; i < 9; i++)
             Cell[i].sprite = null;
