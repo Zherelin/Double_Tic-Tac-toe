@@ -21,10 +21,10 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                     GameScript.move = false;
                 }
                 //Cell = Tac
-                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tac && Game.overlapsTic > 0)
+                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tac && Game.overlapsPlayer > 0)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTic;
-                    Game.overlapsTic--;
+                    Game.overlapsPlayer--;
                     GameScript.move = false;
                 }
                 //Exception
@@ -41,10 +41,10 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                     GameScript.move = false;
                 }
                 //Cell = Tic
-                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tic && Game.overlapsTac > 0)
+                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tic && Game.overlapsOpponent > 0)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTac;
-                    Game.overlapsTac--;
+                    Game.overlapsOpponent--;
                     GameScript.move = false;
                 }
                 //Exception

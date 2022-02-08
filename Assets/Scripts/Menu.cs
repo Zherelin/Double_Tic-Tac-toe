@@ -3,8 +3,8 @@ using UnityEngine.SceneManagement;
 
 public class Menu : MonoBehaviour
 {
-    public static int level = 0; // Уровень игры
-    public static int type = 0; // Тип игры (крестики или нолики)
+    public static string level = ""; // Уровень игры
+    public static string type = ""; // Тип игры
 
     public void ExitGame() // Выход из игры
     {
@@ -19,22 +19,22 @@ public class Menu : MonoBehaviour
     // Выбор уровня и типа игры
     public void ClickTypeTic()
     {
-        type = 1;
+        type = "tic";
     }
     public void ClickTypeTac()
     {
-        type = 2;
+        type = "tac";
     }
-    public void ClickLevelEazy()
+    public void ClickLevelEasy()
     {
-        level = 1;
+        level = "easy";
     }
     public void ClickLevelNormal()
     {
-        level = 2;
+        level = "normal";
     }
-    public void ClickLevelHard()
+    public void ClickLevelChalleng()
     {
-        level = 3;
+        level = "challeng";
     }
 }

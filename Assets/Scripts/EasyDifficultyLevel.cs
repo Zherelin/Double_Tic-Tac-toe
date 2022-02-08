@@ -94,9 +94,9 @@ public class EasyDifficultyLevel : MonoBehaviour
             void OverlapDeduction()
             {
                 if (typePlayer == "tic")
-                    Game.overlapsTic--;
+                    Game.overlapsPlayer--;
                 else if (typePlayer == "tac")
-                    Game.overlapsTac--;
+                    Game.overlapsOpponent--;
             }  
         } 
         else
@@ -114,14 +114,14 @@ public class EasyDifficultyLevel : MonoBehaviour
             _player = GameScript.Tic;
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
-            _playerOverlaps = Game.overlapsTic;
+            _playerOverlaps = Game.overlapsPlayer;
         }
         else if (type == "tac")
         {
             _player = GameScript.Tac;
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
-            _playerOverlaps = Game.overlapsTac;
+            _playerOverlaps = Game.overlapsOpponent;
         }
     }
 }

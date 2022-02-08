@@ -16,66 +16,90 @@ public class Game : MonoBehaviour
 
     [HideInInspector] public bool move; // Разрешение на ход
     [HideInInspector] public int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений
-    public static int overlapsTic; // Кол-во возможных перекрытий
-    public static int overlapsTac; //
+    [HideInInspector] public int overlapsPlayer; // Кол-во возможных перекрытий
+    [HideInInspector] public int overlapsOpponent; //
 
-    private string typePlayer;    //
-    private string typeOpponent;  // Какой тип игрока и соперника
+    private string _typePlayer = "";    //
+    private string _typeOpponent = "";  // Какой тип игрока и соперника
 
     [SerializeField] private EasyDifficultyLevel EasyLevelScript;
     [SerializeField] private NormalDifficultyLevel NormalLevelScript;
     [SerializeField] private ChallengingDifficultyLevel ChallengLevelScript;
     [SerializeField] private CheckGame CheckScript;
-    [SerializeField] private OverlapsBar OverlapsBar;
+    [SerializeField] private OverlapsBar OverlapsBarScript;
 
     private Coroutine _startGame;
 
     public void Start()
     {
-        startOverlaps = 3; // Начальное кол-во отображений перекрытий
-        overlapsTic = startOverlaps; // Начальное кол-во перекрытий
-        overlapsTac = startOverlaps; //
-
-        OverlapsBar.ConnectingOverlapPanel(); // 
-
-        MessagePanel.text = "Игра Началась!";
-        ShowLevel();
-
-        // Первых ход крестиков
-        if (Menu.type == 2)
+        if (Menu.type == "tic" || Menu.type == "tac")
         {
-            if (Menu.level == 1)
+            // Определение типа игроков
+            if (Menu.type == "tic")
             {
-                Cell[Random.Range(0, 8)].sprite = Tic;
+                _typePlayer = "tic";
+                _typeOpponent = "tac";
             }
-            else if (Menu.level == 2 || Menu.level == 3)
+            else if (Menu.type == "tac")
             {
-                int randomCell = Random.Range(0, 8);
-                while (randomCell == 4)
-                    randomCell = Random.Range(0, 8);
-                Cell[randomCell].sprite = Tic;
+                _typePlayer = "tac";
+                _typeOpponent = "tic";
             }
-        }
 
-        // Определение типа игроков
-        if (Menu.type == 1)
-        {
-            typePlayer = "tic";
-            typeOpponent = "tac";
-        }
+            startOverlaps = 3; // Начальное кол-во перекрытий
+            OverlapsBarScript.ConnectingOverlapPanel(_typePlayer);
 
-        if(Menu.type == 2)
-        {
-            typePlayer = "tac";
-            typeOpponent = "tic";
-        }
+            ShowLevelPanel();
 
-        if (Menu.type == 1 || Menu.type == 2)
-        { 
-            _startGame = StartCoroutine(StartGame()); 
+            //// Первых ход крестиков
+            //if (Menu.type == 2)
+            //{
+            //    if (Menu.level == 1)
+            //    {
+            //        Cell[Random.Range(0, 8)].sprite = Tic;
+            //    }
+            //    else if (Menu.level == 2 || Menu.level == 3)
+            //    {
+            //        int randomCell = Random.Range(0, 8);
+            //        while (randomCell == 4)
+            //            randomCell = Random.Range(0, 8);
+            //        Cell[randomCell].sprite = Tic;
+            //    }
+            //}
+
+            StartMatch();
         }
         else
             Debug.LogWarning("Тип игрока неопределён!");
+    }
+
+    private void StartMatch()
+    {
+        // Определение начального счёта и финальной границы матча
+        int playerWins = 0;
+        int opponentWins = 0;
+        int finalWins = 5;
+
+        while(playerWins != finalWins || opponentWins != finalWins)
+        {
+            // Нужна функция отображения счёта матча !!!
+
+            _startGame = StartCoroutine(StartGame());
+
+            // Анализ пройденной игры !!!
+        }
+        // и в конец добавить её!
+
+        if(playerWins == finalWins)
+        {
+            //
+        }
+        else if(opponentWins == finalWins)
+        {
+            //
+        }
+
+        // Придумать способ повтора матча !!!
     }
 
     private IEnumerator StartGame()
@@ -84,15 +108,15 @@ public class Game : MonoBehaviour
 
         while (CheckScript.StatusGame() == 0)
         {
-            bool isMovePlayer = IsPossibleToMakeMove(typePlayer);
-            bool isMoveOpponent = IsPossibleToMakeMove(typeOpponent);
+            bool isMovePlayer = IsPossibleToMakeMove(_typePlayer);
+            bool isMoveOpponent = IsPossibleToMakeMove(_typeOpponent);
 
             if (isMovePlayer == true)
             {
                 move = true;
                 yield return new WaitUntil(() => move == false);
 
-                if (IsPossibleToMakeMove(typeOpponent) == true)
+                if (IsPossibleToMakeMove(_typeOpponent) == true)
                 {
                     yield return new WaitForSeconds(0.5f);
                     SelectionGame();
@@ -117,40 +141,21 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void SelectionGame() // Выбор типа и уровня игры
+    private void SelectionGame() // Выбор уровня игры
     {
-        //Пользователь за 'Tic', а программа за 'Tac'
-        if (Menu.type == 1)
+        if (_typePlayer == "tic" || _typePlayer == "tac")
         {
-            if (Menu.level == 1)
+            if (Menu.level == "easy")
             {
-                EasyLevelScript.PlayGame("tac");
+                EasyLevelScript.PlayGame(_typeOpponent);
             }
-            else if (Menu.level == 2)
+            else if (Menu.level == "normal")
             {
-                NormalLevelScript.PlayGame("tac");
+                NormalLevelScript.PlayGame(_typeOpponent);
             }
-            else if (Menu.level == 3)
+            else if (Menu.level == "challeng")
             {
-                ChallengLevelScript.PlayGame("tac");
-            }
-            else
-                Debug.LogWarning("Уровень не определён");
-        }
-        // Пользователь за 'Tac', а программа за 'Tic'
-        else if (Menu.type == 2)
-        {
-            if (Menu.level == 1)
-            {
-                EasyLevelScript.PlayGame("tic");
-            }
-            else if (Menu.level == 2)
-            {
-                NormalLevelScript.PlayGame("tic");
-            }
-            else if (Menu.level == 3)
-            {
-                ChallengLevelScript.PlayGame("tic");
+                ChallengLevelScript.PlayGame(_typeOpponent);
             }
             else
                 Debug.LogWarning("Уровень не определён");
@@ -209,12 +214,12 @@ public class Game : MonoBehaviour
             if (type == "tic")
             {
                 opponent = Tac;
-                playerOverlaps = overlapsTic;
+                playerOverlaps = overlapsPlayer;
             }
             if (type == "tac")
             {
                 opponent = Tic;
-                playerOverlaps = overlapsTac;
+                playerOverlaps = overlapsOpponent;
             }
 
             for (int number = 0; number < 9; number++)
@@ -242,14 +247,20 @@ public class Game : MonoBehaviour
         }
     }
 
-    private void ShowLevel()
+    private void ShowLevelPanel()
     {
-        if (Menu.level == 1)
+        if (Menu.level == "easy")
+        {
             GameTypePanel.text = "Легкий";
-        else if (Menu.level == 2)
+        }
+        else if (Menu.level == "normal")
+        {
             GameTypePanel.text = "Нормальный";
-        else if (Menu.level == 3)
+        }
+        else if (Menu.level == "challeng")
+        {
             GameTypePanel.text = "Сложный";
+        }
         else
             GameTypePanel.text = "?";
     }

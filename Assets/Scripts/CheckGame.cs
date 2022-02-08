@@ -24,8 +24,8 @@ public class CheckGame : MonoBehaviour
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
             _opponentClosing = GameScript.ClosingTac;
-            _playerOverlaps = Game.overlapsTic;
-            _opponentOverlaps = Game.overlapsTac;
+            _playerOverlaps = Game.overlapsPlayer;
+            _opponentOverlaps = Game.overlapsOpponent;
         }
         else if(type == "tac")
         {
@@ -33,8 +33,8 @@ public class CheckGame : MonoBehaviour
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
             _opponentClosing = GameScript.ClosingTic;
-            _playerOverlaps = Game.overlapsTac;
-            _opponentOverlaps = Game.overlapsTic;
+            _playerOverlaps = Game.overlapsOpponent;
+            _opponentOverlaps = Game.overlapsPlayer;
         }
         else
         {
@@ -89,7 +89,7 @@ public class CheckGame : MonoBehaviour
             return 2;
 
         // Проверка на ничью
-        else if (Game.overlapsTic < 1 && Game.overlapsTac < 1 && IsFieldEmpty() == false)
+        else if (Game.overlapsPlayer < 1 && Game.overlapsOpponent < 1 && IsFieldEmpty() == false)
             return 3;
 
         // Продолжение игры
