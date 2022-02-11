@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using LibraryOfPathPositions;
+using EnumGame;
 
 public class CheckGame : MonoBehaviour
 {
@@ -24,8 +25,8 @@ public class CheckGame : MonoBehaviour
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
             _opponentClosing = GameScript.ClosingTac;
-            _playerOverlaps = Game.overlapsPlayer;
-            _opponentOverlaps = Game.overlapsOpponent;
+            _playerOverlaps = GameScript.overlapsPlayer;
+            _opponentOverlaps = GameScript.overlapsOpponent;
         }
         else if(type == "tac")
         {
@@ -33,8 +34,8 @@ public class CheckGame : MonoBehaviour
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
             _opponentClosing = GameScript.ClosingTic;
-            _playerOverlaps = Game.overlapsOpponent;
-            _opponentOverlaps = Game.overlapsPlayer;
+            _playerOverlaps = GameScript.overlapsOpponent;
+            _opponentOverlaps = GameScript.overlapsPlayer;
         }
         else
         {
@@ -46,54 +47,57 @@ public class CheckGame : MonoBehaviour
     // ФУНКЦИИ АНАЛИЗА ИГРЫ
     //
 
-    public int StatusGame() // Проверка статуса игры
+    public GameState StatusGame() // Проверка статуса игры
     {
-        // Проверка победы TIC
-        if (CheckingTheFieldForVictory(0, 1, 2, "tic"))
-            return 1;
-        else if (CheckingTheFieldForVictory(3, 4, 5, "tic"))
-            return 1;
-        else if (CheckingTheFieldForVictory(6, 7, 8, "tic"))
-            return 1;
+        string player = GameScript.TypePlayer;
+        string opponent = GameScript.TypeOpponent;
 
-        else if (CheckingTheFieldForVictory(0, 3, 6, "tic"))
-            return 1;
-        else if (CheckingTheFieldForVictory(1, 4, 7, "tic"))
-            return 1;
-        else if (CheckingTheFieldForVictory(2, 5, 8, "tic"))
-            return 1;
+        // Проверка победы Player
+        if (CheckingTheFieldForVictory(0, 1, 2, player))
+            return GameState.VictoryPlayer;
+        else if (CheckingTheFieldForVictory(3, 4, 5, player))
+            return GameState.VictoryPlayer;
+        else if (CheckingTheFieldForVictory(6, 7, 8, player))
+            return GameState.VictoryPlayer;
 
-        else if (CheckingTheFieldForVictory(0, 4, 8, "tic"))
-            return 1;
-        else if (CheckingTheFieldForVictory(2, 4, 6, "tic"))
-            return 1;
+        else if (CheckingTheFieldForVictory(0, 3, 6, player))
+            return GameState.VictoryPlayer;
+        else if (CheckingTheFieldForVictory(1, 4, 7, player))
+            return GameState.VictoryPlayer;
+        else if (CheckingTheFieldForVictory(2, 5, 8, player))
+            return GameState.VictoryPlayer;
 
-        //Проверка победы TAC
-        else if (CheckingTheFieldForVictory(0, 1, 2, "tac"))
-            return 2;
-        else if (CheckingTheFieldForVictory(3, 4, 5, "tac"))
-            return 2;
-        else if (CheckingTheFieldForVictory(6, 7, 8, "tac"))
-            return 2;
+        else if (CheckingTheFieldForVictory(0, 4, 8, player))
+            return GameState.VictoryPlayer;
+        else if (CheckingTheFieldForVictory(2, 4, 6, player))
+            return GameState.VictoryPlayer;
 
-        else if (CheckingTheFieldForVictory(0, 3, 6, "tac"))
-            return 2;
-        else if (CheckingTheFieldForVictory(1, 4, 7, "tac"))
-            return 2;
-        else if (CheckingTheFieldForVictory(2, 5, 8, "tac"))
-            return 2;
+        //Проверка победы Opponent
+        else if (CheckingTheFieldForVictory(0, 1, 2, opponent))
+            return GameState.VictoryOpponent;
+        else if (CheckingTheFieldForVictory(3, 4, 5, opponent))
+            return GameState.VictoryOpponent;
+        else if (CheckingTheFieldForVictory(6, 7, 8, opponent))
+            return GameState.VictoryOpponent;
 
-        else if (CheckingTheFieldForVictory(0, 4, 8, "tac"))
-            return 2;
-        else if (CheckingTheFieldForVictory(2, 4, 6, "tac"))
-            return 2;
+        else if (CheckingTheFieldForVictory(0, 3, 6, opponent))
+            return GameState.VictoryOpponent;
+        else if (CheckingTheFieldForVictory(1, 4, 7, opponent))
+            return GameState.VictoryOpponent;
+        else if (CheckingTheFieldForVictory(2, 5, 8, opponent))
+            return GameState.VictoryOpponent;
+
+        else if (CheckingTheFieldForVictory(0, 4, 8, opponent))
+            return GameState.VictoryOpponent;
+        else if (CheckingTheFieldForVictory(2, 4, 6, opponent))
+            return GameState.VictoryOpponent;
 
         // Проверка на ничью
-        else if (Game.overlapsPlayer < 1 && Game.overlapsOpponent < 1 && IsFieldEmpty() == false)
-            return 3;
+        else if (GameScript.overlapsPlayer < 1 && GameScript.overlapsOpponent < 1 && IsFieldEmpty() == false)
+            return GameState.Draw;
 
         // Продолжение игры
-        else return 0;
+        else return GameState.Continues;
 
         // Проверки поля на победу
         bool CheckingTheFieldForVictory(int number1, int number2, int number3, string type)

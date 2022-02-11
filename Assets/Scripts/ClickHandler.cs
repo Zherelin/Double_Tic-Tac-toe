@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using EnumGame;
 
 public class ClickHandler : MonoBehaviour, IPointerClickHandler
 {
@@ -9,10 +10,9 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (CheckScript.StatusGame() == 0 && GameScript.move == true)
+        if (CheckScript.StatusGame() == GameState.Continues && GameScript.move == true)
         {
-            //Tic
-            if (Menu.type == 1)
+            if (Menu.type == "tic")
             {
                 //Cell = Null
                 if (gameObject.GetComponent<Image>().sprite == null)
@@ -21,18 +21,17 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                     GameScript.move = false;
                 }
                 //Cell = Tac
-                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tac && Game.overlapsPlayer > 0)
+                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tac && GameScript.overlapsPlayer > 0)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTic;
-                    Game.overlapsPlayer--;
+                    GameScript.overlapsPlayer--;
                     GameScript.move = false;
                 }
                 //Exception
                 else
                     GameScript.MessagePanel.text = "Невозможно добавить значение в ячейку!";
             }
-            //Tac
-            else if (Menu.type == 2)
+            else if (Menu.type == "tac")
             {
                 //Cell = Null
                 if (gameObject.GetComponent<Image>().sprite == null)
@@ -41,10 +40,10 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                     GameScript.move = false;
                 }
                 //Cell = Tic
-                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tic && Game.overlapsOpponent > 0)
+                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tic && GameScript.overlapsOpponent > 0)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTac;
-                    Game.overlapsOpponent--;
+                    GameScript.overlapsOpponent--;
                     GameScript.move = false;
                 }
                 //Exception

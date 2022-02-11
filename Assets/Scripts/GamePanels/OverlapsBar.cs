@@ -3,21 +3,21 @@ using UnityEngine.UI;
 
 public class OverlapsBar : MonoBehaviour
 {
-    public Game GameScript;
-    public Image[] OverlapsBarPlayer;   // ќтображение кол-во перекрытий
-    public Image[] OverlapsBarOpponent; // на панели
+    [SerializeField] private Game GameScript;
+    [SerializeField] private Image[] OverlapsBarPlayer;   // ќтображение кол-во перекрытий
+    [SerializeField] private Image[] OverlapsBarOpponent; // на панели
 
     private Sprite _player;
     private Sprite _opponent;
 
-    public void ConnectingOverlapPanel(string typePlayer)
+    public void ConnectingOverlapPanel()
     {
-        if (typePlayer == "tic")
+        if (GameScript.TypePlayer == "tic")
         {
             _player = GameScript.Tic;
             _opponent = GameScript.Tac;
         }
-        else if (typePlayer == "tac")
+        else if (GameScript.TypePlayer == "tac")
         {
             _player = GameScript.Tac;
             _opponent = GameScript.Tic;
@@ -34,10 +34,10 @@ public class OverlapsBar : MonoBehaviour
     void Update()
     {
         // ѕроверка изменени€ кол-ва перекрытий и отключени€ лишних спрайтов на панели
-        if (GameScript.overlapsPlayer != GameScript.startOverlaps)
+        if (GameScript.overlapsPlayer != GameScript.startOverlaps && GameScript.overlapsPlayer >= 0)
             OverlapsBarPlayer[GameScript.overlapsPlayer].gameObject.SetActive(false);
 
-        if (GameScript.overlapsOpponent != GameScript.startOverlaps)
+        if (GameScript.overlapsOpponent != GameScript.startOverlaps && GameScript.overlapsOpponent >= 0)
             OverlapsBarOpponent[GameScript.overlapsOpponent].gameObject.SetActive(false);
     }
 }

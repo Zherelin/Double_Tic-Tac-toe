@@ -1607,7 +1607,7 @@ GameObject:
   - component: {fileID: 708925989}
   - component: {fileID: 708925988}
   m_Layer: 5
-  m_Name: ButtonHard
+  m_Name: ButtonChalleng
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1691,7 +1691,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 377059616}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: ClickLevelHard
+        m_MethodName: ClickLevelChalleng
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2861,7 +2861,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 377059616}
         m_TargetAssemblyTypeName: Menu, Assembly-CSharp
-        m_MethodName: ClickLevelEazy
+        m_MethodName: ClickLevelEasy
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

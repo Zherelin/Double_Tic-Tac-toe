@@ -18,7 +18,7 @@ public class EasyDifficultyLevel : MonoBehaviour
         {
             AssigningSprites(typePlayer); // Назначение спрайтов
 
-            if (CheckScript.StatusGame() == 0) // Проверка на то, что игра продолжается
+            if (CheckScript.StatusGame() == EnumGame.GameState.Continues) // Проверка на то, что игра продолжается
             {
                 int winning = CheckScript.AttackStrategy(typePlayer);            // Результат выигрышного хода
                 int protection = CheckScript.ProtectionStrategyEazy(typePlayer); // Результат защиты
@@ -94,9 +94,9 @@ public class EasyDifficultyLevel : MonoBehaviour
             void OverlapDeduction()
             {
                 if (typePlayer == "tic")
-                    Game.overlapsPlayer--;
+                    GameScript.overlapsPlayer--;
                 else if (typePlayer == "tac")
-                    Game.overlapsOpponent--;
+                    GameScript.overlapsOpponent--;
             }  
         } 
         else
@@ -114,14 +114,14 @@ public class EasyDifficultyLevel : MonoBehaviour
             _player = GameScript.Tic;
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
-            _playerOverlaps = Game.overlapsPlayer;
+            _playerOverlaps = GameScript.overlapsPlayer;
         }
         else if (type == "tac")
         {
             _player = GameScript.Tac;
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
-            _playerOverlaps = Game.overlapsOpponent;
+            _playerOverlaps = GameScript.overlapsOpponent;
         }
     }
 }
