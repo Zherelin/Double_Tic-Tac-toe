@@ -119,7 +119,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                         GameScript.Cell[randomCell].sprite = _player;
                     }
                     else
-                        GameScript.MessagePanel.text = "Пропуск хода";
+                        StartCoroutine(GameScript.ShowMessage("Пропуск хода"));
 
 
                     // Является ли позиция проигрышной

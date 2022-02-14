@@ -86,7 +86,7 @@ public class EasyDifficultyLevel : MonoBehaviour
                         OverlapDeduction();
                     }
                     else 
-                        GameScript.MessagePanel.text = "Пропуск хода";
+                        StartCoroutine(GameScript.ShowMessage("Пропуск хода"));
                 }
             }
 

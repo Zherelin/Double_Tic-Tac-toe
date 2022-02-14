@@ -29,7 +29,7 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                 }
                 //Exception
                 else
-                    GameScript.MessagePanel.text = "Невозможно добавить значение в ячейку!";
+                    StartCoroutine(GameScript.ShowMessage("Невозможно добавить значение в ячейку!"));
             }
             else if (Menu.type == "tac")
             {
@@ -48,10 +48,10 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                 }
                 //Exception
                 else
-                    GameScript.MessagePanel.text = "Невозможно добавить значение в ячейку!";
+                    StartCoroutine(GameScript.ShowMessage("Невозможно добавить значение в ячейку!"));
             }
             else
-                GameScript.MessagePanel.text = "Тип игрока неопределён!";
+                StartCoroutine(GameScript.ShowMessage("Тип игрока неопределён!"));
         }
     }
 }

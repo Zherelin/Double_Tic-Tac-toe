@@ -28,7 +28,7 @@ public class MatchScorePanel : MonoBehaviour
 
     public void ShowMatchScore()
     {
-        ScorePlayer.text = GameScript.overlapsPlayer.ToString();
-        ScoreOpponent.text = GameScript.overlapsOpponent.ToString();
+        ScorePlayer.text = GameScript.WinsPlayer.ToString();
+        ScoreOpponent.text = GameScript.WinsOpponent.ToString();
     }
 }

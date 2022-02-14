@@ -30,8 +30,7 @@ public class OverlapsBar : MonoBehaviour
         }
     }
 
-    // Возможно Update лишний, а лучше заменить на обычную функцию?!
-    void Update()
+    public void DisplayingOverlapsBar()
     {
         // Проверка изменения кол-ва перекрытий и отключения лишних спрайтов на панели
         if (GameScript.overlapsPlayer != GameScript.startOverlaps && GameScript.overlapsPlayer >= 0)
@@ -39,5 +38,14 @@ public class OverlapsBar : MonoBehaviour
 
         if (GameScript.overlapsOpponent != GameScript.startOverlaps && GameScript.overlapsOpponent >= 0)
             OverlapsBarOpponent[GameScript.overlapsOpponent].gameObject.SetActive(false);
+    }
+
+    public void ResettingOverlapsBar()
+    {
+        for (int number = 0; number < GameScript.startOverlaps; number++)
+        {
+            OverlapsBarPlayer[number].gameObject.SetActive(true);
+            OverlapsBarOpponent[number].gameObject.SetActive(true);
+        }
     }
 }

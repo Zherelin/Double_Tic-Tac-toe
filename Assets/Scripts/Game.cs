@@ -11,7 +11,7 @@ public class Game : MonoBehaviour
     public Sprite ClosingTac; // 
     public Image[] Cell; // Игровое поле
 
-    public Text MessagePanel;
+    [SerializeField] private Text MessagePanel;
 
     [HideInInspector] public bool move; // Разрешение на ход
     [HideInInspector] public int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений
@@ -20,8 +20,22 @@ public class Game : MonoBehaviour
 
     private string _typePlayer = "";    //
     private string _typeOpponent = "";  // Какой тип игрока и соперника
+    private int _playerWins;   //
+    private int _opponentWins; // Определение начального счёта и финальной границы матча
     private Coroutine _startGame;
     private Coroutine _startMatch;
+
+    // Свойства
+    public int WinsPlayer
+    {
+        get { return _playerWins; }
+        set { _playerWins = value; }
+    }
+    public int WinsOpponent
+    {
+        get { return _opponentWins; }
+        set { _opponentWins = value; }
+    }
 
     public string TypePlayer
     {
@@ -32,6 +46,13 @@ public class Game : MonoBehaviour
         get { return _typeOpponent; }
     }
 
+    public IEnumerator ShowMessage(string message)
+    {
+        MessagePanel.text = message;
+        yield return new WaitForSeconds(2f);
+        MessagePanel.text = "";
+    }
+
     [SerializeField] private EasyDifficultyLevel EasyLevelScript;
     [SerializeField] private NormalDifficultyLevel NormalLevelScript;
     [SerializeField] private ChallengingDifficultyLevel ChallengLevelScript;
@@ -39,6 +60,7 @@ public class Game : MonoBehaviour
     [SerializeField] private OverlapsBar OverlapsBarScript;
     [SerializeField] private MatchScorePanel MatchScorePanelScript;
     [SerializeField] private GameInformationPanel GameInformationPanelScript;
+    [SerializeField] private ResultGamePanel ResultGamePanelScript;
 
     public void Start()
     {
@@ -56,9 +78,7 @@ public class Game : MonoBehaviour
                 _typeOpponent = "tic";
             }
 
-            startOverlaps = 3; // Начальное кол-во перекрытий
-            overlapsPlayer = startOverlaps;
-            overlapsOpponent = startOverlaps;
+            startOverlaps = 3;
 
             OverlapsBarScript.ConnectingOverlapPanel();
             MatchScorePanelScript.ConnectionMatchScorePanel();
@@ -73,8 +93,8 @@ public class Game : MonoBehaviour
     private IEnumerator StartMatch()
     {
         // Определение начального счёта и финальной границы матча
-        int playerWins = 0;
-        int opponentWins = 0;
+        _playerWins = 0;
+        _opponentWins = 0;
         int finalWins = 5;
         GameState gameState = CheckScript.StatusGame();
 
@@ -82,32 +102,30 @@ public class Game : MonoBehaviour
         int test = 0;
         //
 
-        while(playerWins != finalWins || opponentWins != finalWins)
+        while(_playerWins != finalWins && _opponentWins != finalWins)
         {
             MatchScorePanelScript.ShowMatchScore();
 
             _startGame = StartCoroutine(StartGame());
-
             yield return new WaitUntil(() => CheckScript.StatusGame() != GameState.Continues);
 
             if (CheckScript.StatusGame() == GameState.VictoryPlayer)
             {
-                playerWins++;
+                _playerWins++;
                 // Test
-                Debug.Log("Victory Player: playerWins = " + playerWins);
+                Debug.Log("Victory Player: playerWins = " + _playerWins);
                 //
             }
             else if (CheckScript.StatusGame() == GameState.VictoryOpponent)
             {
-                opponentWins++;
+                _opponentWins++;
                 // TEST
-                Debug.Log("Victory Opponent: opponentWins = " + opponentWins);
+                Debug.Log("Victory Opponent: opponentWins = " + _opponentWins);
                 //
             }
 
-            // TEST
-            Debug.Log("WHILE StartMatch");
-            //
+            ResultGamePanelScript.ShowResultGamePanel();
+            yield return new WaitUntil(() => ResultGamePanelScript.gameObject.activeInHierarchy == false);
 
             //------------
             // Очистка поля
@@ -118,6 +136,7 @@ public class Game : MonoBehaviour
 
             overlapsPlayer = startOverlaps;
             overlapsOpponent = startOverlaps;
+            OverlapsBarScript.ResettingOverlapsBar();
             //------------
 
             // TEST
@@ -131,13 +150,13 @@ public class Game : MonoBehaviour
         }
         MatchScorePanelScript.ShowMatchScore();
 
-        if (playerWins == finalWins)
+        if (_playerWins == finalWins)
         {
-            //
+            StartCoroutine(ShowMessage("В матче победил игрок"));
         }
-        else if(opponentWins == finalWins)
+        else if(_opponentWins == finalWins)
         {
-            //
+            StartCoroutine(ShowMessage("В матче победил оппонент"));
         }
 
         // Придумать способ повтора матча !!!
@@ -145,6 +164,9 @@ public class Game : MonoBehaviour
 
     private IEnumerator StartGame()
     {
+        overlapsPlayer = startOverlaps;
+        overlapsOpponent = startOverlaps;
+
         // Первых ход крестиков
         if (_typeOpponent == "tic")
         {
@@ -182,14 +204,14 @@ public class Game : MonoBehaviour
                     yield return new WaitForSeconds(0.5f);
                     SelectionGame();
                 }
-
-                PrintStatusGame();
             }
             else if (isMoveOpponent == true)
             {
-                yield return new WaitForSeconds(0.5f);
+                yield return new WaitForSeconds(1f);
                 SelectionGame();
             }
+
+            OverlapsBarScript.DisplayingOverlapsBar();
 
             // TEST
             test++;
@@ -223,31 +245,6 @@ public class Game : MonoBehaviour
         }
         else
             Debug.LogWarning("Тип игрока не определён");
-
-
-        PrintStatusGame();
-    }
-
-    private void PrintStatusGame() // Вывод на панель статуса игры
-    {
-        GameState gameState = CheckScript.StatusGame();
-
-        if (gameState == GameState.VictoryPlayer)
-        {
-            MessagePanel.text = "Победа Игрока!";
-        }
-        else if (gameState == GameState.VictoryOpponent)
-        {
-            MessagePanel.text = "Победа Оппонента!";
-        }
-        else if (gameState == GameState.Draw)
-        {
-            MessagePanel.text = "Ничья!";
-        }
-        else
-        {
-            MessagePanel.text = "Игра продолжается!";
-        }
     }
 
     private bool IsPossibleToMakeMove(string type) // Проверка на возможность сделать ход
