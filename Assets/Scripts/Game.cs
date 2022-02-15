@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
     private int _opponentWins; // Определение начального счёта и финальной границы матча
     private Coroutine _startGame;
     private Coroutine _startMatch;
+    private bool _isGameGoingOn;
 
     // Свойства
     public int WinsPlayer
@@ -102,26 +103,22 @@ public class Game : MonoBehaviour
         int test = 0;
         //
 
+        StartCoroutine(ShowMessage("Матч Начался!"));
         while(_playerWins != finalWins && _opponentWins != finalWins)
         {
             MatchScorePanelScript.ShowMatchScore();
 
+            _isGameGoingOn = true;
             _startGame = StartCoroutine(StartGame());
-            yield return new WaitUntil(() => CheckScript.StatusGame() != GameState.Continues);
+            yield return new WaitUntil(() => _isGameGoingOn == false);
 
             if (CheckScript.StatusGame() == GameState.VictoryPlayer)
             {
                 _playerWins++;
-                // Test
-                Debug.Log("Victory Player: playerWins = " + _playerWins);
-                //
             }
             else if (CheckScript.StatusGame() == GameState.VictoryOpponent)
             {
                 _opponentWins++;
-                // TEST
-                Debug.Log("Victory Opponent: opponentWins = " + _opponentWins);
-                //
             }
 
             ResultGamePanelScript.ShowResultGamePanel();
@@ -152,14 +149,16 @@ public class Game : MonoBehaviour
 
         if (_playerWins == finalWins)
         {
-            StartCoroutine(ShowMessage("В матче победил игрок"));
+            StartCoroutine(ShowMessage("В Матче Победил Игрок"));
         }
         else if(_opponentWins == finalWins)
         {
-            StartCoroutine(ShowMessage("В матче победил оппонент"));
+            StartCoroutine(ShowMessage("В Матче Победил Оппонент"));
         }
 
-        // Придумать способ повтора матча !!!
+        // Оформить повтор матча !!!
+        yield return new WaitForSeconds(2f);
+        RestartMatch();
     }
 
     private IEnumerator StartGame()
@@ -222,6 +221,8 @@ public class Game : MonoBehaviour
             }
             //
         }
+
+        _isGameGoingOn = false;
     }
 
     private void SelectionGame() // Выбор уровня игры
@@ -290,5 +291,11 @@ public class Game : MonoBehaviour
             Debug.LogWarning("Ошибка во входном параметре 'IsPossibleToMakeMove'. Входной параметр: " + type);
             return false;
         }
+    }
+
+    public void RestartMatch()
+    {
+        StopAllCoroutines();
+        Start();
     }
 }
