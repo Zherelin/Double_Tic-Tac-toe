@@ -124,17 +124,10 @@ public class Game : MonoBehaviour
             ResultGamePanelScript.ShowResultGamePanel();
             yield return new WaitUntil(() => ResultGamePanelScript.gameObject.activeInHierarchy == false);
 
-            //------------
             // Очистка поля
             StopCoroutine(_startGame);
-
-            for (int i = 0; i < 9; i++)
-                Cell[i].sprite = null;
-
-            overlapsPlayer = startOverlaps;
-            overlapsOpponent = startOverlaps;
+            ClearingField();
             OverlapsBarScript.ResettingOverlapsBar();
-            //------------
 
             // TEST
             test++;
@@ -293,9 +286,19 @@ public class Game : MonoBehaviour
         }
     }
 
+    private void ClearingField()
+    {
+        for (int i = 0; i < 9; i++)
+            Cell[i].sprite = null;
+
+        overlapsPlayer = startOverlaps;
+        overlapsOpponent = startOverlaps;
+    }
+
     public void RestartMatch()
     {
         StopAllCoroutines();
+        ClearingField();
         Start();
     }
 }

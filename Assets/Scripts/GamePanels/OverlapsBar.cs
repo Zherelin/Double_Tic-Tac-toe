@@ -32,15 +32,29 @@ public class OverlapsBar : MonoBehaviour
 
     public void DisplayingOverlapsBar()
     {
+        // Переделать логику !!!
+        // 
         // Проверка изменения кол-ва перекрытий и отключения лишних спрайтов на панели
         if (GameScript.overlapsPlayer != GameScript.startOverlaps && GameScript.overlapsPlayer >= 0)
+        {
             OverlapsBarPlayer[GameScript.overlapsPlayer].gameObject.SetActive(false);
 
+            // TEST
+            Debug.Log("OverlapsBarPlayer - 1");
+            //
+        }
+
         if (GameScript.overlapsOpponent != GameScript.startOverlaps && GameScript.overlapsOpponent >= 0)
+        {
             OverlapsBarOpponent[GameScript.overlapsOpponent].gameObject.SetActive(false);
+
+            // TEST
+            Debug.Log("OverlapsBarOpponent - 1");
+            //
+        }
     }
 
-    public void ResettingOverlapsBar()
+        public void ResettingOverlapsBar()
     {
         for (int number = 0; number < GameScript.startOverlaps; number++)
         {
