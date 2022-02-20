@@ -3,7 +3,7 @@ using UnityEngine;
 public class EasyDifficultyLevel : MonoBehaviour
 {
     [SerializeField] private Game GameScript;
-    [SerializeField] CheckGame CheckScript;
+    [SerializeField] private CheckGame CheckScript;
 
     private Sprite _player;
     private Sprite _playerClosing;
@@ -33,7 +33,7 @@ public class EasyDifficultyLevel : MonoBehaviour
                     else
                     {
                         GameScript.Cell[winning].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                 }
 
@@ -47,7 +47,7 @@ public class EasyDifficultyLevel : MonoBehaviour
                     else
                     {
                         GameScript.Cell[protection].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                 }
 
@@ -83,21 +83,12 @@ public class EasyDifficultyLevel : MonoBehaviour
                         }
 
                         GameScript.Cell[randomCell].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                     else 
                         StartCoroutine(GameScript.ShowMessage("Пропуск хода"));
                 }
-            }
-
-            // Вычет перекрытия
-            void OverlapDeduction()
-            {
-                if (typePlayer == "tic")
-                    GameScript.overlapsPlayer--;
-                else if (typePlayer == "tac")
-                    GameScript.overlapsOpponent--;
-            }  
+            } 
         } 
         else
         {
@@ -114,14 +105,14 @@ public class EasyDifficultyLevel : MonoBehaviour
             _player = GameScript.Tic;
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
-            _playerOverlaps = GameScript.overlapsPlayer;
+            _playerOverlaps = GameScript.OverlapsOpponent;
         }
         else if (type == "tac")
         {
             _player = GameScript.Tac;
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
-            _playerOverlaps = GameScript.overlapsOpponent;
+            _playerOverlaps = GameScript.OverlapsOpponent;
         }
     }
 }

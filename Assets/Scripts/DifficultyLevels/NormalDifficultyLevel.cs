@@ -35,7 +35,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                     else
                     {
                         GameScript.Cell[winning].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                 }
 
@@ -49,7 +49,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                     else
                     {
                         GameScript.Cell[protection].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                 }
 
@@ -57,14 +57,14 @@ public class NormalDifficultyLevel : MonoBehaviour
                 else if (losing != -1)
                 {
                     GameScript.Cell[losing].sprite = _playerClosing;
-                    OverlapDeduction();
+                    GameScript.OverlapsOpponent--;
                 }
 
                 // Если соперник сделал ход в центр поля, то перекрываем его
                 else if (GameScript.Cell[4].sprite == _opponent && _playerOverlaps > 0)
                 {
                     GameScript.Cell[4].sprite = _playerClosing;
-                    OverlapDeduction();
+                    GameScript.OverlapsOpponent--;
                 }
 
                 // Случайный ход
@@ -107,7 +107,7 @@ public class NormalDifficultyLevel : MonoBehaviour
                             randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
 
                     else if (isThereAnEmptyCell == true) // Если же не осталось других ходов
@@ -146,16 +146,6 @@ public class NormalDifficultyLevel : MonoBehaviour
                     }
                 }
             }
-
-            // Вычет перекрытия
-            //
-            void OverlapDeduction()
-            {
-                if (typePlayer == "tic")
-                    GameScript.overlapsPlayer--;
-                else if (typePlayer == "tac")
-                    GameScript.overlapsOpponent--;
-            }
         }
         else
         {
@@ -172,14 +162,14 @@ public class NormalDifficultyLevel : MonoBehaviour
             _player = GameScript.Tic;
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
-            _playerOverlaps = GameScript.overlapsPlayer;
+            _playerOverlaps = GameScript.OverlapsOpponent;
         }
         else if (type == "tac")
         {
             _player = GameScript.Tac;
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
-            _playerOverlaps = GameScript.overlapsOpponent;
+            _playerOverlaps = GameScript.OverlapsOpponent;
         }
     }
 }

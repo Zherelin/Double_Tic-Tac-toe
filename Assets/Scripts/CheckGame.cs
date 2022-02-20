@@ -17,7 +17,7 @@ public class CheckGame : MonoBehaviour
 
     // Функция назначение спрайтов
     //
-    private void AssigningSprites(string type)
+    private void AssigningSprites(string type) // !!!!!!!
     {
         if(type == "tic")
         {
@@ -25,8 +25,17 @@ public class CheckGame : MonoBehaviour
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
             _opponentClosing = GameScript.ClosingTac;
-            _playerOverlaps = GameScript.overlapsPlayer;
-            _opponentOverlaps = GameScript.overlapsOpponent;
+
+            if(GameScript.TypePlayer == type)
+            {
+                _playerOverlaps = GameScript.OverlapsPlayer;
+                _opponentOverlaps = GameScript.OverlapsOpponent;
+            }
+            else
+            {
+                _playerOverlaps = GameScript.OverlapsOpponent;
+                _opponentOverlaps = GameScript.OverlapsPlayer;
+            }
         }
         else if(type == "tac")
         {
@@ -34,8 +43,17 @@ public class CheckGame : MonoBehaviour
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
             _opponentClosing = GameScript.ClosingTic;
-            _playerOverlaps = GameScript.overlapsOpponent;
-            _opponentOverlaps = GameScript.overlapsPlayer;
+
+            if (GameScript.TypePlayer == type)
+            {
+                _playerOverlaps = GameScript.OverlapsPlayer;
+                _opponentOverlaps = GameScript.OverlapsOpponent;
+            }
+            else
+            {
+                _playerOverlaps = GameScript.OverlapsOpponent;
+                _opponentOverlaps = GameScript.OverlapsPlayer;
+            }
         }
         else
         {
@@ -93,7 +111,7 @@ public class CheckGame : MonoBehaviour
             return GameState.VictoryOpponent;
 
         // Проверка на ничью
-        else if (GameScript.overlapsPlayer < 1 && GameScript.overlapsOpponent < 1 && IsFieldEmpty() == false)
+        else if (GameScript.OverlapsPlayer < 1 && GameScript.OverlapsOpponent < 1 && IsFieldEmpty() == false)
             return GameState.Draw;
 
         // Продолжение игры
@@ -118,8 +136,10 @@ public class CheckGame : MonoBehaviour
         {
             bool flag = false;
             for (int i = 0; i < 9; i++)
+            {
                 if (GameScript.Cell[i].sprite == null)
                     flag = true;
+            }
 
             return flag;
         }

@@ -10,6 +10,9 @@ public class OverlapsBar : MonoBehaviour
     private Sprite _player;
     private Sprite _opponent;
 
+    private int _currentOverlapsPlayer;
+    private int _currentOverlapsOpponent;
+
     public void ConnectingOverlapPanel()
     {
         if (GameScript.TypePlayer == "tic")
@@ -23,40 +26,39 @@ public class OverlapsBar : MonoBehaviour
             _opponent = GameScript.Tic;
         }
 
-        for (int number = 0; number < GameScript.startOverlaps; number++)
+        _currentOverlapsPlayer = GameScript.StartOverlaps;
+        _currentOverlapsOpponent = GameScript.StartOverlaps;
+
+        for (int number = 0; number < GameScript.StartOverlaps; number++)
         {
             OverlapsBarPlayer[number].sprite = _player;
             OverlapsBarOpponent[number].sprite = _opponent;
         }
     }
 
+    // Проверка изменения кол-ва перекрытий и отключения лишних спрайтов на панели
+    //
     public void DisplayingOverlapsBar()
     {
-        // Переделать логику !!!
-        // 
-        // Проверка изменения кол-ва перекрытий и отключения лишних спрайтов на панели
-        if (GameScript.overlapsPlayer != GameScript.startOverlaps && GameScript.overlapsPlayer >= 0)
+        if (GameScript.OverlapsPlayer != _currentOverlapsPlayer && GameScript.OverlapsPlayer >= 0)
         {
-            OverlapsBarPlayer[GameScript.overlapsPlayer].gameObject.SetActive(false);
-
-            // TEST
-            Debug.Log("OverlapsBarPlayer - 1");
-            //
+            OverlapsBarPlayer[GameScript.OverlapsPlayer].gameObject.SetActive(false);
+            _currentOverlapsPlayer--;
         }
 
-        if (GameScript.overlapsOpponent != GameScript.startOverlaps && GameScript.overlapsOpponent >= 0)
+        if (GameScript.OverlapsOpponent != _currentOverlapsOpponent && GameScript.OverlapsOpponent >= 0)
         {
-            OverlapsBarOpponent[GameScript.overlapsOpponent].gameObject.SetActive(false);
-
-            // TEST
-            Debug.Log("OverlapsBarOpponent - 1");
-            //
+            OverlapsBarOpponent[GameScript.OverlapsOpponent].gameObject.SetActive(false);
+            _currentOverlapsOpponent--;
         }
     }
 
-        public void ResettingOverlapsBar()
+    public void ResettingOverlapsBar()
     {
-        for (int number = 0; number < GameScript.startOverlaps; number++)
+        _currentOverlapsPlayer = GameScript.StartOverlaps;
+        _currentOverlapsOpponent = GameScript.StartOverlaps;
+
+        for (int number = 0; number < GameScript.StartOverlaps; number++)
         {
             OverlapsBarPlayer[number].gameObject.SetActive(true);
             OverlapsBarOpponent[number].gameObject.SetActive(true);

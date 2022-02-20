@@ -3897,9 +3897,6 @@ MonoBehaviour:
   - {fileID: 802006307}
   MessagePanel: {fileID: 1595104182}
   move: 0
-  startOverlaps: 0
-  overlapsPlayer: 0
-  overlapsOpponent: 0
   EasyLevelScript: {fileID: 1899768282}
   NormalLevelScript: {fileID: 1899768284}
   ChallengLevelScript: {fileID: 1899768285}

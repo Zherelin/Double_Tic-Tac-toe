@@ -5,7 +5,7 @@ using EnumGame;
 
 public class ClickHandler : MonoBehaviour, IPointerClickHandler
 {
-    [SerializeField] private Game GameScript; // Подключение скрипта игры
+    [SerializeField] private Game GameScript;
     [SerializeField] private CheckGame CheckScript;
 
     public void OnPointerClick(PointerEventData eventData)
@@ -14,39 +14,39 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
         {
             if (Menu.type == "tic")
             {
-                //Cell = Null
+                // Клетка пустая
                 if (gameObject.GetComponent<Image>().sprite == null)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.Tic;
                     GameScript.move = false;
                 }
-                //Cell = Tac
-                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tac && GameScript.overlapsPlayer > 0)
+                // Клетка противника
+                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tac && GameScript.OverlapsPlayer > 0)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTic;
-                    GameScript.overlapsPlayer--;
+                    GameScript.OverlapsPlayer--;
                     GameScript.move = false;
                 }
-                //Exception
+                // В ином случае
                 else
                     StartCoroutine(GameScript.ShowMessage("Невозможно добавить значение в ячейку!"));
             }
             else if (Menu.type == "tac")
             {
-                //Cell = Null
+                // Клетка пустая
                 if (gameObject.GetComponent<Image>().sprite == null)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.Tac;
                     GameScript.move = false;
                 }
-                //Cell = Tic
-                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tic && GameScript.overlapsOpponent > 0)
+                // Клетка противника
+                else if (gameObject.GetComponent<Image>().sprite == GameScript.Tic && GameScript.OverlapsPlayer > 0)
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTac;
-                    GameScript.overlapsOpponent--;
+                    GameScript.OverlapsPlayer--;
                     GameScript.move = false;
                 }
-                //Exception
+                // В ином случае
                 else
                     StartCoroutine(GameScript.ShowMessage("Невозможно добавить значение в ячейку!"));
             }

@@ -34,7 +34,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     else
                     {
                         GameScript.Cell[winning].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                 }
 
@@ -48,7 +48,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     else
                     {
                         GameScript.Cell[protection].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
                 }
 
@@ -56,28 +56,28 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                 else if(CheckScript.CrossingAttack(typePlayer, ref GameScript.Cell) != -1 && _playerOverlaps > 0)
                 {
                     GameScript.Cell[CheckScript.CrossingAttack(typePlayer, ref GameScript.Cell)].sprite = _playerClosing;
-                    OverlapDeduction();
+                    GameScript.OverlapsOpponent--;
                 }
 
                 // Заведома проигрышная позиция соперника
                 else if (CheckScript.LosingPosition(typePlayer) != -1)
                 {
                     GameScript.Cell[CheckScript.LosingPosition(typePlayer)].sprite = _playerClosing;
-                    OverlapDeduction();
+                    GameScript.OverlapsOpponent--;
                 }
 
                 // Если соперник сделал ход в центр поля, то перекрываем его
                 else if (GameScript.Cell[4].sprite == _opponent && _playerOverlaps > 0)
                 {
                     GameScript.Cell[4].sprite = _playerClosing;
-                    OverlapDeduction();
+                    GameScript.OverlapsOpponent--;
                 }
 
                 // Защита при пересечении
                 else if(CheckScript.CrossingProtection(typePlayer, ref GameScript.Cell) != -1 && _playerOverlaps > 0)
                 {
                     GameScript.Cell[CheckScript.CrossingProtection(typePlayer, ref GameScript.Cell)].sprite = _playerClosing;
-                    OverlapDeduction();
+                    GameScript.OverlapsOpponent--;
                 }
 
                 // Случайный ход
@@ -121,7 +121,7 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                             randomCell = Random.Range(0, 9);
                         }
                         GameScript.Cell[randomCell].sprite = _playerClosing;
-                        OverlapDeduction();
+                        GameScript.OverlapsOpponent--;
                     }
 
                     else if (isThereAnEmptyCell == true) // Если же не осталось других ходов
@@ -160,16 +160,6 @@ public class ChallengingDifficultyLevel : MonoBehaviour
                     }
                 }
             }
-
-            // Вычет перекрытия
-            //
-            void OverlapDeduction()
-            {
-                if (typePlayer == "tic")
-                    GameScript.overlapsPlayer--;
-                else if (typePlayer == "tac")
-                    GameScript.overlapsOpponent--;
-            }
         }
         else
         {
@@ -186,14 +176,14 @@ public class ChallengingDifficultyLevel : MonoBehaviour
             _player = GameScript.Tic;
             _playerClosing = GameScript.ClosingTic;
             _opponent = GameScript.Tac;
-            _playerOverlaps = GameScript.overlapsPlayer;
+            _playerOverlaps = GameScript.OverlapsOpponent;
         }
         else if (type == "tac")
         {
             _player = GameScript.Tac;
             _playerClosing = GameScript.ClosingTac;
             _opponent = GameScript.Tic;
-            _playerOverlaps = GameScript.overlapsOpponent;
+            _playerOverlaps = GameScript.OverlapsOpponent;
         }
     }
 }

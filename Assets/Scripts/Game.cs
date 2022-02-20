@@ -14,17 +14,20 @@ public class Game : MonoBehaviour
     [SerializeField] private Text MessagePanel;
 
     [HideInInspector] public bool move; // Разрешение на ход
-    [HideInInspector] public int startOverlaps; // Стартовое кол-во перекрытий для проверки изменений
-    [HideInInspector] public int overlapsPlayer; // Кол-во возможных перекрытий
-    [HideInInspector] public int overlapsOpponent; //
 
-    private string _typePlayer = "";    //
-    private string _typeOpponent = "";  // Какой тип игрока и соперника
+    private int _startOverlaps;
+    private int _overlapsPlayer;
+    private int _overlapsOpponent;
+
+    private string _typePlayer = "";
+    private string _typeOpponent = "";
+
     private int _playerWins;   //
     private int _opponentWins; // Определение начального счёта и финальной границы матча
+
+    private bool _isGameGoingOn;
     private Coroutine _startGame;
     private Coroutine _startMatch;
-    private bool _isGameGoingOn;
 
     // Свойства
     public int WinsPlayer
@@ -47,12 +50,33 @@ public class Game : MonoBehaviour
         get { return _typeOpponent; }
     }
 
-    public IEnumerator ShowMessage(string message)
+    public int StartOverlaps
     {
-        MessagePanel.text = message;
-        yield return new WaitForSeconds(2f);
-        MessagePanel.text = "";
+        get { return _startOverlaps; }
     }
+    public int OverlapsPlayer
+    {
+        get { return _overlapsPlayer; }
+        set
+        {
+            if (value >= 0)
+                _overlapsPlayer = value;
+            else
+                Debug.LogWarning("Получение недопустимого значения перекрытий 'Player'");
+        }
+    }
+    public int OverlapsOpponent
+    {
+        get { return _overlapsOpponent; }
+        set
+        {
+            if (value >= 0)
+                _overlapsOpponent = value;
+            else
+                Debug.LogWarning("Получение недопустимого значения перекрытий 'Opponent'");
+        }
+    }
+    //
 
     [SerializeField] private EasyDifficultyLevel EasyLevelScript;
     [SerializeField] private NormalDifficultyLevel NormalLevelScript;
@@ -79,7 +103,7 @@ public class Game : MonoBehaviour
                 _typeOpponent = "tic";
             }
 
-            startOverlaps = 3;
+            _startOverlaps = 3;
 
             OverlapsBarScript.ConnectingOverlapPanel();
             MatchScorePanelScript.ConnectionMatchScorePanel();
@@ -156,12 +180,14 @@ public class Game : MonoBehaviour
 
     private IEnumerator StartGame()
     {
-        overlapsPlayer = startOverlaps;
-        overlapsOpponent = startOverlaps;
+        _overlapsPlayer = _startOverlaps;
+        _overlapsOpponent = _startOverlaps;
 
         // Первых ход крестиков
         if (_typeOpponent == "tic")
         {
+            move = false;
+
             if (Menu.level == "easy")
             {
                 yield return new WaitForSeconds(0.5f);
@@ -253,12 +279,12 @@ public class Game : MonoBehaviour
             if (type == "tic")
             {
                 opponent = Tac;
-                playerOverlaps = overlapsPlayer;
+                playerOverlaps = _overlapsPlayer;
             }
             if (type == "tac")
             {
                 opponent = Tic;
-                playerOverlaps = overlapsOpponent;
+                playerOverlaps = _overlapsOpponent;
             }
 
             for (int number = 0; number < 9; number++)
@@ -291,14 +317,22 @@ public class Game : MonoBehaviour
         for (int i = 0; i < 9; i++)
             Cell[i].sprite = null;
 
-        overlapsPlayer = startOverlaps;
-        overlapsOpponent = startOverlaps;
+        _overlapsPlayer = _startOverlaps;
+        _overlapsOpponent = _startOverlaps;
     }
 
     public void RestartMatch()
     {
         StopAllCoroutines();
         ClearingField();
-        Start();
+        OverlapsBarScript.ResettingOverlapsBar();
+        _startMatch = StartCoroutine(StartMatch());
+    }
+
+    public IEnumerator ShowMessage(string message)
+    {
+        MessagePanel.text = message;
+        yield return new WaitForSeconds(2f);
+        MessagePanel.text = "";
     }
 }
