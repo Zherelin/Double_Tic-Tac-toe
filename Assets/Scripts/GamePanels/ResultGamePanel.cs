@@ -1,68 +1,77 @@
 using UnityEngine;
 using UnityEngine.UI;
 using EnumGame;
-using System.Collections;
 
 public class ResultGamePanel : MonoBehaviour
 {
-    [SerializeField] private CheckGame CheckScript;
-    [SerializeField] private Text ResultGame;
-    [SerializeField] private Image BackgroundPanel;
+    [SerializeField] private Game _gameScript;
+    [SerializeField] private CheckGame _checkScript;
+    [SerializeField] private EmergenceUI _emergenceUI;
 
-    private float _alpha = 0f;
-    private float _alphaFinal = 0.6f;
-    private float _timeUpdateAlpha = 0.01f;
-    private float _stepForAlpha = 0.02f;
-    private Color _background—olor;
+    [SerializeField] private Image _resultPanel;
+    [SerializeField] private GameObject _resultGame;
+    [SerializeField] private GameObject _resultMatch;
+    [SerializeField] private Text _textResultGame;
+    [SerializeField] private Text _textResultMatch;
+    [SerializeField] private Text _ScorePlayer;
+    [SerializeField] private Text _ScoreOpponent;
 
     private Coroutine _emergencePanel;
-
-    private void Awake()
-    {
-        _background—olor = BackgroundPanel.color;
-        _background—olor.a = _alpha;
-    }
 
     public void ShowResultGamePanel()
     {
         gameObject.SetActive(true);
+        _resultGame.SetActive(true);
 
-        _alpha = 0f;
-        BackgroundPanel.color = _background—olor;
-
-        if (CheckScript.StatusGame() == GameState.VictoryPlayer)
+        if (_checkScript.StatusGame() == GameState.VictoryPlayer)
         {
-            ResultGame.text = "¬€ œŒ¡≈ƒ»À»!";
+            _textResultGame.text = "¬€ œŒ¡≈ƒ»À»!";
         }
-        else if (CheckScript.StatusGame() == GameState.VictoryOpponent)
+        else if (_checkScript.StatusGame() == GameState.VictoryOpponent)
         {
-            ResultGame.text = "¬€ œ–Œ»√–¿À»!";
+            _textResultGame.text = "¬€ œ–Œ»√–¿À»!";
         }
-        else if (CheckScript.StatusGame() == GameState.Draw)
+        else if (_checkScript.StatusGame() == GameState.Draw)
         {
-            ResultGame.text = "Õ»◊‹ﬂ!";
+            _textResultGame.text = "Õ»◊‹ﬂ!";
         }
         else
         {
-            ResultGame.text = "’–≈Õ «Õ¿≈“!";
+            _textResultGame.text = "’–≈Õ «Õ¿≈“!";
         }
 
-        _emergencePanel = StartCoroutine(EmergencePanel());
+        _emergencePanel = StartCoroutine(_emergenceUI.EmergenceImage(_resultPanel));
     }
 
-    private IEnumerator EmergencePanel()
+    public void ShowResultMatchPanel()
     {
-        while(BackgroundPanel.color.a < _alphaFinal)
+        gameObject.SetActive(true);
+        _resultMatch.SetActive(true);
+
+        if (_gameScript.WinsPlayer == _gameScript.WinsFinal)
         {
-            _alpha += _stepForAlpha;
-            BackgroundPanel.color = new Color(_background—olor.r, _background—olor.g, _background—olor.b, _alpha);
-            yield return new WaitForSeconds(_timeUpdateAlpha);
+            _textResultMatch.text = "œŒ¡≈ƒ¿";
         }
+        else if (_gameScript.WinsOpponent == _gameScript.WinsFinal)
+        {
+            _textResultMatch.text = "œ–Œ»√–€ÿ";
+        }
+        else
+        {
+            _textResultMatch.text = "’–≈Õ «Õ¿≈“";
+        }
+
+        _ScorePlayer.text = _gameScript.WinsPlayer.ToString();
+        _ScoreOpponent.text = _gameScript.WinsOpponent.ToString();
+
+        _emergencePanel = StartCoroutine(_emergenceUI.EmergenceImage(_resultPanel));
     }
 
     public void OnClickButton()
     {
         StopCoroutine(_emergencePanel);
+        _resultGame.SetActive(false);
+        _resultMatch.SetActive(false);
         gameObject.SetActive(false);
     }
 }

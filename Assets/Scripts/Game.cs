@@ -24,6 +24,7 @@ public class Game : MonoBehaviour
 
     private int _playerWins;   //
     private int _opponentWins; // Определение начального счёта и финальной границы матча
+    private int _finalWins;    //
 
     private bool _isGameGoingOn;
     private Coroutine _startGame;
@@ -39,6 +40,10 @@ public class Game : MonoBehaviour
     {
         get { return _opponentWins; }
         set { _opponentWins = value; }
+    }
+    public int WinsFinal
+    {
+        get { return _finalWins; }
     }
 
     public string TypePlayer
@@ -120,7 +125,7 @@ public class Game : MonoBehaviour
         // Определение начального счёта и финальной границы матча
         _playerWins = 0;
         _opponentWins = 0;
-        int finalWins = 5;
+        _finalWins = 5;
         GameState gameState = CheckScript.StatusGame();
 
         //TEST
@@ -128,7 +133,7 @@ public class Game : MonoBehaviour
         //
 
         StartCoroutine(ShowMessage("Матч Начался!"));
-        while(_playerWins != finalWins && _opponentWins != finalWins)
+        while(_playerWins != _finalWins && _opponentWins != _finalWins)
         {
             MatchScorePanelScript.ShowMatchScore();
 
@@ -136,6 +141,7 @@ public class Game : MonoBehaviour
             _startGame = StartCoroutine(StartGame());
             yield return new WaitUntil(() => _isGameGoingOn == false);
 
+            // Подсчёт очков и их вывод
             if (CheckScript.StatusGame() == GameState.VictoryPlayer)
             {
                 _playerWins++;
@@ -144,8 +150,17 @@ public class Game : MonoBehaviour
             {
                 _opponentWins++;
             }
+            MatchScorePanelScript.ShowMatchScore();
 
-            ResultGamePanelScript.ShowResultGamePanel();
+            // Отображение панели результата игры
+            if (_playerWins < _finalWins && _opponentWins < _finalWins)
+            {
+                ResultGamePanelScript.ShowResultGamePanel();
+            }
+            else
+            {
+                ResultGamePanelScript.ShowResultMatchPanel();
+            }
             yield return new WaitUntil(() => ResultGamePanelScript.gameObject.activeInHierarchy == false);
 
             // Очистка поля
@@ -162,19 +177,7 @@ public class Game : MonoBehaviour
             }
             //
         }
-        MatchScorePanelScript.ShowMatchScore();
 
-        if (_playerWins == finalWins)
-        {
-            StartCoroutine(ShowMessage("В Матче Победил Игрок"));
-        }
-        else if(_opponentWins == finalWins)
-        {
-            StartCoroutine(ShowMessage("В Матче Победил Оппонент"));
-        }
-
-        // Оформить повтор матча !!!
-        yield return new WaitForSeconds(2f);
         RestartMatch();
     }
 
@@ -216,6 +219,7 @@ public class Game : MonoBehaviour
             {
                 move = true;
                 yield return new WaitUntil(() => move == false);
+                OverlapsBarScript.DisplayingOverlapsBar();
 
                 if (IsPossibleToMakeMove(_typeOpponent) == true)
                 {
