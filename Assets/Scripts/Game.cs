@@ -208,12 +208,14 @@ public class Game : MonoBehaviour
             }
         }
 
-        int test = 0; // TEST
-
         while (CheckScript.StatusGame() == GameState.Continues)
         {
             bool isMovePlayer = IsPossibleToMakeMove(_typePlayer);
             bool isMoveOpponent = IsPossibleToMakeMove(_typeOpponent);
+
+            //TEST
+            int test = 0;
+            //
 
             if (isMovePlayer == true)
             {
@@ -226,6 +228,8 @@ public class Game : MonoBehaviour
                     yield return new WaitForSeconds(0.5f);
                     SelectionGame();
                 }
+                else
+                    StartCoroutine(ShowMessage("Пропуск хода"));
             }
             else if (isMoveOpponent == true)
             {
@@ -283,12 +287,26 @@ public class Game : MonoBehaviour
             if (type == "tic")
             {
                 opponent = Tac;
-                playerOverlaps = _overlapsPlayer;
+                if(type == TypePlayer)
+                {
+                    playerOverlaps = _overlapsPlayer;
+                }
+                else
+                {
+                    playerOverlaps = _overlapsOpponent;
+                }
             }
             if (type == "tac")
             {
                 opponent = Tic;
-                playerOverlaps = _overlapsOpponent;
+                if (type == TypePlayer)
+                {
+                    playerOverlaps = _overlapsPlayer;
+                }
+                else
+                {
+                    playerOverlaps = _overlapsOpponent;
+                }
             }
 
             for (int number = 0; number < 9; number++)

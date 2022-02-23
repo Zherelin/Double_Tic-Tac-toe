@@ -86,6 +86,7 @@ public class EasyDifficultyLevel : MonoBehaviour
                         GameScript.OverlapsOpponent--;
                     }
                     else 
+                        // Возможно это лишняя строчка!
                         StartCoroutine(GameScript.ShowMessage("Пропуск хода"));
                 }
             } 
