@@ -8,9 +8,6 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
     [SerializeField] private Game GameScript;
     [SerializeField] private CheckGame CheckScript;
 
-    [SerializeField] private AudioSource soundStep;
-    [SerializeField] private AudioSource soundStepOverlap;
-
     public void OnPointerClick(PointerEventData eventData)
     {
         if (CheckScript.StatusGame() == GameState.Continues && GameScript.move == true)
@@ -22,8 +19,6 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.Tic;
                     GameScript.move = false;
-
-                    soundStep.Play();
                 }
 
                 // Клетка противника
@@ -32,8 +27,6 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTic;
                     GameScript.OverlapsPlayer--;
                     GameScript.move = false;
-
-                    soundStepOverlap.Play();
                 }
 
                 else
@@ -46,8 +39,6 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                 {
                     gameObject.GetComponent<Image>().sprite = GameScript.Tac;
                     GameScript.move = false;
-
-                    soundStep.Play();
                 }
 
                 // Клетка противника
@@ -56,8 +47,6 @@ public class ClickHandler : MonoBehaviour, IPointerClickHandler
                     gameObject.GetComponent<Image>().sprite = GameScript.ClosingTac;
                     GameScript.OverlapsPlayer--;
                     GameScript.move = false;
-
-                    soundStepOverlap.Play();
                 }
 
                 else

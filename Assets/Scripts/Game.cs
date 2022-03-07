@@ -92,6 +92,8 @@ public class Game : MonoBehaviour
     [SerializeField] private GameInformationPanel GameInformationPanelScript;
     [SerializeField] private ResultGamePanel ResultGamePanelScript;
 
+    [SerializeField] private AudioSource _soundStep;
+
     public void Start()
     {
         if (Menu.type == "tic" || Menu.type == "tac")
@@ -206,6 +208,8 @@ public class Game : MonoBehaviour
                     randomCell = Random.Range(0, 8);
                 Cell[randomCell].sprite = Tic;
             }
+
+            _soundStep.Play();
         }
 
         while (CheckScript.StatusGame() == GameState.Continues)
@@ -221,12 +225,15 @@ public class Game : MonoBehaviour
             {
                 move = true;
                 yield return new WaitUntil(() => move == false);
+                _soundStep.Play();
                 OverlapsBarScript.DisplayingOverlapsBar();
 
-                if (IsPossibleToMakeMove(_typeOpponent) == true)
+                if (IsPossibleToMakeMove(_typeOpponent) == true && CheckScript.StatusGame() == GameState.Continues)
                 {
                     yield return new WaitForSeconds(0.5f);
                     SelectionGame();
+
+                    _soundStep.Play();
                 }
                 else
                     StartCoroutine(ShowMessage("Пропуск хода"));
@@ -235,6 +242,8 @@ public class Game : MonoBehaviour
             {
                 yield return new WaitForSeconds(1f);
                 SelectionGame();
+
+                _soundStep.Play();
             }
 
             OverlapsBarScript.DisplayingOverlapsBar();

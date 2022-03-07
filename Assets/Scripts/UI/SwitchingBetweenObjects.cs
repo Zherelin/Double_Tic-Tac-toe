@@ -2,23 +2,23 @@ using UnityEngine;
 
 public class SwitchingBetweenObjects : MonoBehaviour
 {
-    [SerializeField] private GameObject gameObject1;
-    [SerializeField] private GameObject gameObject2;
-    private bool switching = false;
+    [SerializeField] private GameObject _gameObject1;
+    [SerializeField] private GameObject _gameObject2;
+    private bool _toggle = false;
 
     public void Switching()
     {
-        if(switching == false)
+        if(_toggle == false)
         {
-            gameObject1.SetActive(false);
-            gameObject2.SetActive(true);
+            _gameObject1.SetActive(false);
+            _gameObject2.SetActive(true);
         }
         else
         {
-            gameObject2.SetActive(false);
-            gameObject1.SetActive(true);
+            _gameObject2.SetActive(false);
+            _gameObject1.SetActive(true);
         }
 
-        switching = !switching;
+        _toggle = !_toggle;
     }
 }

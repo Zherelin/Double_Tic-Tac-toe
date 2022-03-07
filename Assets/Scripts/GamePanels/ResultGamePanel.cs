@@ -16,6 +16,10 @@ public class ResultGamePanel : MonoBehaviour
     [SerializeField] private Text _ScorePlayer;
     [SerializeField] private Text _ScoreOpponent;
 
+    [SerializeField] private AudioSource _audioVictory;
+    [SerializeField] private AudioSource _audioLoss;
+    [SerializeField] private AudioSource _audioDraw;
+
     private Coroutine _emergencePanel;
 
     public void ShowResultGamePanel()
@@ -26,14 +30,17 @@ public class ResultGamePanel : MonoBehaviour
         if (_checkScript.StatusGame() == GameState.VictoryPlayer)
         {
             _textResultGame.text = "¬€ œŒ¡≈ƒ»À»!";
+            _audioVictory.Play();
         }
         else if (_checkScript.StatusGame() == GameState.VictoryOpponent)
         {
             _textResultGame.text = "¬€ œ–Œ»√–¿À»!";
+            _audioLoss.Play();
         }
         else if (_checkScript.StatusGame() == GameState.Draw)
         {
             _textResultGame.text = "Õ»◊‹ﬂ!";
+            _audioDraw.Play();
         }
         else
         {
@@ -51,10 +58,12 @@ public class ResultGamePanel : MonoBehaviour
         if (_gameScript.WinsPlayer == _gameScript.WinsFinal)
         {
             _textResultMatch.text = "œŒ¡≈ƒ¿";
+            _audioVictory.Play();
         }
         else if (_gameScript.WinsOpponent == _gameScript.WinsFinal)
         {
             _textResultMatch.text = "œ–Œ»√–€ÿ";
+            _audioLoss.Play();
         }
         else
         {
